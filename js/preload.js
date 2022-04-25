@@ -6,9 +6,11 @@ function preload() {
 
   showLoader(this);
   this.load.path = '../assets/images/';
-  this.load.image('splash', '125848.png');
+  //this.load.image('splash', '125848.png');
+  this.load.image('title', 'title.png');
   //this.load.image('arrow', 'arrow.png');
   this.load.image('maxxdaddy', 'maxxdaddy.gif');
+  this.load.image('star', 'star.png');
  
   this.load.spritesheet('player', 'player.png', {
     frameWidth: 30,

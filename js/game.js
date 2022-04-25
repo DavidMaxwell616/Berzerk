@@ -652,10 +652,10 @@ function moveOtto() {
 }
 
 function update() {
-return;
-  if (!startGame)
+  if (!startGame){
+    mainMenuUpdate();
     return;
-
+  }
   if (player.x > 885) {
     // if (guardCount > 0){
     //   player.setPosition(xStart, yStart).setVelocityX(0).setVelocityY(0);

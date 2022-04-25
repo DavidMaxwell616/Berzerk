@@ -1,12 +1,16 @@
 function mainMenuCreate(scene) {
   var width = scene.game.config.width; 
   var height = scene.game.config.height;
-   splash = scene.add.image(0, 0, 'splash');
-  splash.setDisplaySize(width, height);
-  splash.setOrigin(0, 0);
+  stars = _scene.add.group();
+  for (var t = 1; t<200; t++) {
+    var rx = Phaser.Math.Between(1, width);
+    var ry = Phaser.Math.Between(1, HORIZON);
+    var star = _scene.add.sprite(rx,ry,'star');
+    stars.add(star);
+  }
+  title = scene.add.sprite(width/2, height/2, 'title');
+  title.setOrigin(.5);
   maxxdaddy = scene.add.image(width * 0.9, height * 0.87, 'maxxdaddy');
-  title = scene.add.sprite(width/2, height*.25, 'title');
-  title.setOrigin(.5).setScale(2);
   highScore = localStorage.getItem(localStorageName) == null ? 0 :
   localStorage.getItem(localStorageName);
 
@@ -29,7 +33,6 @@ function mainMenuCreate(scene) {
 
 scene.anims.create(animConfig);
  var pointer = scene.input.activePointer;
- // console.log(pointer);
   scene.input.on('pointerdown', function(pointer){
     Start();
  });
@@ -38,16 +41,23 @@ scene.anims.create(animConfig);
   function Start(){
   if (startGame)
       return;
-    splash.visible = false;
+//    splash.visible = false;
   title.visible = false;
   highScoreText.visible = false;
     startGame = true;
+    stars.destroy(true);
     gameCreate(scene);
 }
-
-
-
 }
+
+function mainMenuUpdate(){
+  stars.getChildren().forEach((star) => {
+    if(Phaser.Math.Between(1, 100)==1)
+      star.setTint(Math.random() * 0xffffff);
+  });
+}
+
+
 function showMainMenu(){
   splash.visible = true;
   title.visible = true;

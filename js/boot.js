@@ -4,7 +4,8 @@ const TITLE_HEIGHT = 141;
 const X_SCALE = 180;
 const Y_SCALE = 200;
 const WALL_WIDTH =10;
-
+const HORIZON = 250;
+let stars;
 let player;
 let cursors;
 let levels;
