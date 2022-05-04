@@ -1,6 +1,6 @@
 var config = {
   type: Phaser.AUTO,
-  width: 900,
+  width: 800,
   height: 500,
   parent: 'game',
   scene: {
@@ -443,29 +443,35 @@ function fryPlayer() {
 function buildLevel(level) {
   _scene.matter.world.setBounds().disableGravity();
   levelData = objectData['level_' + level];
-var wallCoords = levelData[0].walls;
+  var wallCoords = levelData[0].walls;
 var x = 0, y = 0;
-for (let index = 0; index < wallCoords.length; index+=4) {
+ for (let index = 0; index < 8; index+=4) {
 var x1 = wallCoords[index] * X_SCALE;
 var y1 = wallCoords[index+1] * Y_SCALE;
 var x2 = wallCoords[index+2] * X_SCALE;
 var y2 = wallCoords[index+3] * Y_SCALE;
-var wall;
-if(y1==y2)
-{
+ var wall;
+ if(y1==y2)
+ {
   wall = x1 + ' ' + y1 +' '+ x2 + ' ' + y1 +' '+
   x2 + ' ' + (y2+WALL_WIDTH) + ' ' + x1 + ' ' + (y1+WALL_WIDTH);
 }
-else
-{
-  wall = x1 + ' ' + y1 +' '+ (x2+WALL_WIDTH) + ' ' + y1 +' '+
-  (x2+WALL_WIDTH) + ' ' + y2 + ' ' + x2 + ' ' + y2;
-}
-  var poly = _scene.add.polygon(x,y, wall, 0xff, 1);
-  _scene.matter.add.gameObject(poly, { shape: { type: 'fromVerts', verts: wall, flagInternal: true } });
-  x+=X_SCALE;
-  if(y2>y1)
-    y+=Y_SCALE;
+ else
+ {
+   wall = x1 + ' ' + y1 +' '+ (x2+WALL_WIDTH) + ' ' + y1 +' '+
+   (x2+WALL_WIDTH) + ' ' + y2 + ' ' + x2 + ' ' + y2;
+ }
+ var poly = _scene.add.polygon(x,y, wall, 0xff, 1);
+poly.setOrigin(0);
+ console.log(poly);
+// poly,
+//   _scene.matter.add.gameObject(poly, { shape: { type: 'fromVerts', verts: wall, flagInternal: true } });
+//x+=10;
+//y+=10;
+
+//    x+=X_SCALE;
+//    if(y2>y1)
+//      y+=Y_SCALE;
 }
 
 
@@ -656,106 +662,106 @@ function update() {
     mainMenuUpdate();
     return;
   }
-  if (player.x > 885) {
-    // if (guardCount > 0){
-    //   player.setPosition(xStart, yStart).setVelocityX(0).setVelocityY(0);
-    //   killOtto();
-     }
-    else {
-//       clearLevel(this);
-      player.setPosition(xStart, yStart);
-      level++;
-      buildLevel(level);
-//      guardCount = numGuards = level + 4;
-//      spawnEnemies(this);
-//      killOtto();
-    }
-//  }
-if(level==9){
-  moveWall++;
-  if(moveWall>50)
-{
-  level_9_top_wall.y+=5;
-  level_9_top_wall2.scaleY+=2.5;
+//   if (player.x > 885) {
+//     // if (guardCount > 0){
+//     //   player.setPosition(xStart, yStart).setVelocityX(0).setVelocityY(0);
+//     //   killOtto();
+//      }
+//     else {
+// //       clearLevel(this);
+//       player.setPosition(xStart, yStart);
+//       level++;
+//       buildLevel(level);
+// //      guardCount = numGuards = level + 4;
+// //      spawnEnemies(this);
+// //      killOtto();
+//     }
+// //  }
+// if(level==9){
+//   moveWall++;
+//   if(moveWall>50)
+// {
+//   level_9_top_wall.y+=5;
+//   level_9_top_wall2.scaleY+=2.5;
   
-  level_9_bottom_wall.y-=5;
-  level_9_bottom_wall2.y-=2.5;
-  level_9_bottom_wall2.scaleY+=2.5;
-    moveWall=0;
-}
-}
-  if (player.dying) {
-    player.anims.pause(player.anims.currentAnim.frames[0]);
-    playerXSpeed = 0;
-    playerYSpeed = 0;
-    player.tint = Math.random() * 0xffffff;
-  }
+//   level_9_bottom_wall.y-=5;
+//   level_9_bottom_wall2.y-=2.5;
+//   level_9_bottom_wall2.scaleY+=2.5;
+//     moveWall=0;
+// }
+// }
+//   if (player.dying) {
+//     player.anims.pause(player.anims.currentAnim.frames[0]);
+//     playerXSpeed = 0;
+//     playerYSpeed = 0;
+//     player.tint = Math.random() * 0xffffff;
+//   }
 
-  if (ottoTimer > 0){
-    ottoTimer--;
-  }
+//   if (ottoTimer > 0){
+//     ottoTimer--;
+//   }
 
-  if (ottoTimer == 0 && !ottoAlive) {
-      spawnOtto();
-  }
+//   if (ottoTimer == 0 && !ottoAlive) {
+//       spawnOtto();
+//   }
 
-  if (otto!=undefined && otto.visible)
-    moveOtto();
+//   if (otto!=undefined && otto.visible)
+//     moveOtto();
 
-   if(gameEnding || lives==0)
-    {
-      localStorage.setItem(localStorageName, highScore);
-      if (score > highScore)
-        highScore = score;
-      gameOverText.visible = true;
-      color.random(50);
-      gameOverText.tint = color.color;
-      gameOverText.setScale(3);
-      guards.forEach(guard => {
-        if (guard.gameObject != null){
-        guard.gameObject.destroy();
-      _scene.matter.world.remove(guard);
-        }
-      });
-      player.destroy();
-      _scene.matter.world.remove(player);
-      _scene.time.delayedCall(1000, () => {
-        gameOverText.visible = false;
-          gameOver = true;
-          clearLevel();
-          scoreboard.visible = false;
-          scoreText.visible = false;
-          livesText.visible = false;
-          levelText.visible = false;
-          for (let index = 0; index < arrows.length; index++) {
-            const arrow = arrows[index];
-            arrow.visible = false;
-          }
-          startGame = false;
-          gameEnding = false;
-          showMainMenu();
-        });
+//    if(gameEnding || lives==0)
+//     {
+//       localStorage.setItem(localStorageName, highScore);
+//       if (score > highScore)
+//         highScore = score;
+//       gameOverText.visible = true;
+//       color.random(50);
+//       gameOverText.tint = color.color;
+//       gameOverText.setScale(3);
+//       guards.forEach(guard => {
+//         if (guard.gameObject != null){
+//         guard.gameObject.destroy();
+//       _scene.matter.world.remove(guard);
+//         }
+//       });
+//       player.destroy();
+//       _scene.matter.world.remove(player);
+//       _scene.time.delayedCall(1000, () => {
+//         gameOverText.visible = false;
+//           gameOver = true;
+//           clearLevel();
+//           scoreboard.visible = false;
+//           scoreText.visible = false;
+//           livesText.visible = false;
+//           levelText.visible = false;
+//           for (let index = 0; index < arrows.length; index++) {
+//             const arrow = arrows[index];
+//             arrow.visible = false;
+//           }
+//           startGame = false;
+//           gameEnding = false;
+//           showMainMenu();
+//         });
  
-  return;
-}
+//   return;
+// }
 
-if(gameOver)
-{
-   return;
-}
+// if(gameOver)
+// {
+//    return;
+// }
 
-  if (playerXSpeed === 0 && playerYSpeed === 0)
-  {
-    player.anims.pause(player.anims.currentAnim.frames[0]);
-    if(player.shooting){
-      player.anims.pause();
-      getPlayerShootFrame();
-    }
-  }
-  player.setVelocityX(playerXSpeed);
-  player.setVelocityY(playerYSpeed);
-  updateStats();
-  moveEnemies(this);
+//   if (playerXSpeed === 0 && playerYSpeed === 0)
+//   {
+//     player.anims.pause(player.anims.currentAnim.frames[0]);
+//     if(player.shooting){
+//       player.anims.pause();
+//       getPlayerShootFrame();
+//     }
+//   }
+//   player.setVelocityX(playerXSpeed);
+//   player.setVelocityY(playerYSpeed);
+//   updateStats();
+//   moveEnemies(this);
 }
 
 function getPlayerShootFrame(){
