@@ -1,7 +1,7 @@
 var config = {
   type: Phaser.AUTO,
   width: 800,
-  height: 500,
+  height: 600,
   parent: 'game',
   scene: {
     preload: preload,
@@ -445,7 +445,7 @@ function buildLevel(level) {
   levelData = objectData['level_' + level];
   var wallCoords = levelData[0].walls;
 var x = 0, y = 0;
- for (let index = 0; index < 8; index+=4) {
+ for (let index = 0; index < 80; index+=4) {
 var x1 = wallCoords[index] * X_SCALE;
 var y1 = wallCoords[index+1] * Y_SCALE;
 var x2 = wallCoords[index+2] * X_SCALE;
@@ -453,19 +453,24 @@ var y2 = wallCoords[index+3] * Y_SCALE;
  var wall;
  if(y1==y2)
  {
+//horizontal lines
   wall = x1 + ' ' + y1 +' '+ x2 + ' ' + y1 +' '+
   x2 + ' ' + (y2+WALL_WIDTH) + ' ' + x1 + ' ' + (y1+WALL_WIDTH);
 }
  else
  {
+  if(x1>=width)
+  x1-=WALL_WIDTH;
+  if(x2>=width)
+  x2-=WALL_WIDTH;
+  //vertical lines
    wall = x1 + ' ' + y1 +' '+ (x2+WALL_WIDTH) + ' ' + y1 +' '+
    (x2+WALL_WIDTH) + ' ' + y2 + ' ' + x2 + ' ' + y2;
  }
  var poly = _scene.add.polygon(x,y, wall, 0xff, 1);
 poly.setOrigin(0);
- console.log(poly);
 // poly,
-//   _scene.matter.add.gameObject(poly, { shape: { type: 'fromVerts', verts: wall, flagInternal: true } });
+ //  _scene.matter.add.gameObject(poly, { shape: { type: 'fromVerts', verts: wall, flagInternal: true } });
 //x+=10;
 //y+=10;
 
