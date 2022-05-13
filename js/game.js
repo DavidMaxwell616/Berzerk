@@ -104,7 +104,7 @@ function gameCreate() {
   levelText = _scene.add.text(
     width * 0.6,
     height * 0.9,
-    'level: 1', {
+    'level: '+level, {
       fontFamily: 'Arial',
       fontSize: '18px',
       fill: '#eee',
@@ -445,7 +445,7 @@ function buildLevel(level) {
   levelData = objectData['level_' + level];
   var wallCoords = levelData[0].walls;
 var x = 0, y = 0;
- for (let index = 0; index < 80; index+=4) {
+ for (let index = 0; index < wallCoords.length; index+=4) {
 var x1 = wallCoords[index] * X_SCALE;
 var y1 = wallCoords[index+1] * Y_SCALE;
 var x2 = wallCoords[index+2] * X_SCALE;
@@ -454,6 +454,7 @@ var y2 = wallCoords[index+3] * Y_SCALE;
  if(y1==y2)
  {
 //horizontal lines
+  x2+=WALL_WIDTH;
   wall = x1 + ' ' + y1 +' '+ x2 + ' ' + y1 +' '+
   x2 + ' ' + (y2+WALL_WIDTH) + ' ' + x1 + ' ' + (y1+WALL_WIDTH);
 }
@@ -468,15 +469,14 @@ var y2 = wallCoords[index+3] * Y_SCALE;
    (x2+WALL_WIDTH) + ' ' + y2 + ' ' + x2 + ' ' + y2;
  }
  var poly = _scene.add.polygon(x,y, wall, 0xff, 1);
-poly.setOrigin(0);
-// poly,
- //  _scene.matter.add.gameObject(poly, { shape: { type: 'fromVerts', verts: wall, flagInternal: true } });
-//x+=10;
-//y+=10;
+  poly.setOrigin(0);
+  _scene.matter.add.gameObject(poly, { shape: { type: 'fromVerts', verts: wall, flagInternal: true } });
+x+=10;
+y+=10;
 
-//    x+=X_SCALE;
-//    if(y2>y1)
-//      y+=Y_SCALE;
+   x+=X_SCALE;
+   if(y2>y1)
+     y+=Y_SCALE;
 }
 
 
@@ -606,7 +606,7 @@ function moveEnemies() {
 }
 
 function resetOttoTimer(){
-  ottoTimer = (12-level) * OTTOTIMERLENGTH;
+  ottoTimer = (12-level) * OTTO_TIMER_LENGTH;
 }
 
 function spawnOtto(){
@@ -750,22 +750,22 @@ function update() {
 //   return;
 // }
 
-// if(gameOver)
-// {
-//    return;
-// }
+if(gameOver)
+{
+   return;
+}
 
-//   if (playerXSpeed === 0 && playerYSpeed === 0)
-//   {
-//     player.anims.pause(player.anims.currentAnim.frames[0]);
-//     if(player.shooting){
-//       player.anims.pause();
-//       getPlayerShootFrame();
-//     }
-//   }
-//   player.setVelocityX(playerXSpeed);
-//   player.setVelocityY(playerYSpeed);
-//   updateStats();
+  if (playerXSpeed === 0 && playerYSpeed === 0)
+  {
+    player.anims.pause(player.anims.currentAnim.frames[0]);
+    if(player.shooting){
+      player.anims.pause();
+      getPlayerShootFrame();
+    }
+  }
+  player.setVelocityX(playerXSpeed);
+  player.setVelocityY(playerYSpeed);
+ //  updateStats();
 //   moveEnemies(this);
 }
 

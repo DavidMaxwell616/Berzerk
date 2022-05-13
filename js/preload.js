@@ -14,7 +14,7 @@ function preload() {
  
   this.load.spritesheet('player', 'player.png', {
     frameWidth: 30,
-    frameHeight: 54
+    frameHeight: 50
   }, );
 
   // this.load.image('bullet', 'bullet.png');
