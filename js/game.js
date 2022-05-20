@@ -1,7 +1,7 @@
 var config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: WIDTH,
+  height: HEIGHT,
   parent: 'game',
   scene: {
     preload: preload,
@@ -39,11 +39,11 @@ function gameCreate() {
   walls = _scene.add.group()
   player = _scene.matter.add.sprite(xStart, yStart, 'player');
   player.setOrigin(0.5).setScale(.6);
-  player.body.collideWorldBounds = true;
+  //player.body.collideWorldBounds = true;
   player.body.label = 'player';
   player.dying = false;
   player.shooting = false;
-  highScore = localStorage.getItem(localStorageName) == null ? 0 :
+   highScore = localStorage.getItem(localStorageName) == null ? 0 :
   localStorage.getItem(localStorageName);
 
 
@@ -72,11 +72,11 @@ function gameCreate() {
   playerXSpeed = 0;
   playerYSpeed = 0;
   player.setDepth(1)
-  _scene.matter.world.setBounds(0, 0, width, height);
+ // _scene.matter.world.setBounds(0, 0, width, height);
   maxxdaddy.visible = false;
 
-  resetOttoTimer();
-  buildLevel(level);
+  resetOTTOTimer();
+  buildLevel();
 
   guardCount = numGuards = level + 4;
  // spawnEnemies();
@@ -104,7 +104,7 @@ function gameCreate() {
   levelText = _scene.add.text(
     width * 0.6,
     height * 0.9,
-    'level: '+level, {
+    'LEVEL: '+level, {
       fontFamily: 'Arial',
       fontSize: '18px',
       fill: '#eee',
@@ -223,13 +223,13 @@ function handleCollision(event){
         _scene.matter.world.remove(bullet);
         }
       } 
-       else if(bodyA.label == 'otto' && bodyB.label == 'guard' 
-       || bodyB.label == 'otto' && bodyA.label == 'guard' ) {
+       else if(bodyA.label == 'OTTO' && bodyB.label == 'guard' 
+       || bodyB.label == 'OTTO' && bodyA.label == 'guard' ) {
         var guard = bodyA.label=='guard' ? bodyA : bodyB;
         killGuard(guard);
          }
-      else if(bodyA.label == 'otto' && bodyB.label == 'player'
-      || bodyB.label == 'otto' && bodyA.label == 'player' ) {
+      else if(bodyA.label == 'OTTO' && bodyB.label == 'player'
+      || bodyB.label == 'OTTO' && bodyA.label == 'player' ) {
         fryPlayer();
         }
      //else if (bodyA.label == 'player' && bodyB.label == 'wall') {
@@ -244,8 +244,8 @@ function handleCollision(event){
 function destroyWorld(){
   player.destroy();
   _scene.matter.world.remove(player);
-  otto.destroy();
-  _scene.matter.world.remove(otto);
+  OTTO.destroy();
+  _scene.matter.world.remove(OTTO);
   boss.destroy();
   _scene.matter.world.remove(boss);
   bodyB.gameObject.destroy();
@@ -436,126 +436,45 @@ function fryPlayer() {
     player.setPosition(xStart, yStart);
     player.tint = 0xffffff;
     lives--;
-    killOtto();
+    killOTTO();
   });
 }
 
-function buildLevel(level) {
+function buildLevel() {
   _scene.matter.world.setBounds().disableGravity();
   levelData = objectData['level_' + level];
+  player.tint = levelData[0].player_color;
   var wallCoords = levelData[0].walls;
-var x = 0, y = 0;
- for (let index = 0; index < wallCoords.length; index+=4) {
-var x1 = wallCoords[index] * X_SCALE;
-var y1 = wallCoords[index+1] * Y_SCALE;
-var x2 = wallCoords[index+2] * X_SCALE;
-var y2 = wallCoords[index+3] * Y_SCALE;
- var wall;
- if(y1==y2)
- {
-//horizontal lines
-  x2+=WALL_WIDTH;
-  wall = x1 + ' ' + y1 +' '+ x2 + ' ' + y1 +' '+
-  x2 + ' ' + (y2+WALL_WIDTH) + ' ' + x1 + ' ' + (y1+WALL_WIDTH);
-}
- else
- {
-  if(x1>=width)
-  x1-=WALL_WIDTH;
-  if(x2>=width)
-  x2-=WALL_WIDTH;
-  //vertical lines
-   wall = x1 + ' ' + y1 +' '+ (x2+WALL_WIDTH) + ' ' + y1 +' '+
-   (x2+WALL_WIDTH) + ' ' + y2 + ' ' + x2 + ' ' + y2;
- }
- var poly = _scene.add.polygon(x,y, wall, 0xff, 1);
-  poly.setOrigin(0);
-  _scene.matter.add.gameObject(poly, { shape: { type: 'fromVerts', verts: wall, flagInternal: true } });
-x+=10;
-y+=10;
-
-   x+=X_SCALE;
-   if(y2>y1)
-     y+=Y_SCALE;
-}
-
-
-
-  
-    return;
-
-
-  //  By default it will create a rectangular body the size of the texture
-  var rect = this.matter.add.image(200, 50, 'blue');
-
-  //  However, you can tell it to create any size rectangle you like, such as this one:
-  rect.setBody({
-      type: 'rectangle',
-      width: 128,
-      height: 128
-  });
-
-
-
-
-  return;
-
-  for (let index = 0; index < levelData.length; index++) {
-    var vertices = levelData[index].shape;
-    let polyObject = [];
-    for (let i = 0; i < vertices.length / 2; i++) {
-      polyObject.push({
-        x: vertices[i * 2],
-        y: vertices[i * 2 + 1],
-      });
+    for (let index = 0; index < wallCoords.length; index+=4) {
+    var x1 = wallCoords[index] * X_SCALE;
+    var y1 = wallCoords[index+1] * Y_SCALE;
+    var x2 = wallCoords[index+2] * X_SCALE;
+    var y2 = wallCoords[index+3] * Y_SCALE;
+    if(y1==y2){
+      y2+=WALL_WIDTH;
+     //if(x1>0) 
+     //   x1+=X_SCALE;
+        // if(x2>0) 
+        // x2+=X_SCALE;
     }
-
-    let centre = Phaser.Physics.Matter.Matter.Vertices.centre(polyObject);
-    var verts = _scene.matter.verts.fromPath(vertices.join(' '));
-    for (let i = 0; i < verts.length; i++) {
-      (verts[i].x -= centre.x) * -1 * xScale;
-      (verts[i].y -= centre.y) * -1 * yScale;
+    else{
+      x2+=WALL_WIDTH;
+      // if(y1>0) 
+      //   y1+=Y_SCALE;
+      // y2+=Y_SCALE;
     }
-    var poly = _scene.add.polygon(
-      centre.x * xScale,
-      centre.y * yScale,
-      verts,
-      0x0000ff, 0,
-    );
-    var objBody = _scene.matter.add
-      .gameObject(
-        poly, {
-          shape: {
-            type: 'fromVerts',
-            verts,
-            flagInternal: true,
-          },
-        })
-      .setStatic(true)
-      .setOrigin(0);
-    objBody.body.label = 'obstacle';
-    objBody.setCollisionCategory(cat3);
-    polygons.add(poly);
-    levelBkgd.setDepth(0);
-  }
-  if(level==9)
-  {
-    level_9_top_wall = _scene.matter.add.sprite(width/2, 0, 'level 9 top wall');
-    level_9_top_wall2 = _scene.add.sprite(width/2, 2, 'level 9 top wall 2');
-     level_9_top_wall.body.label = 'wall';
-     level_9_top_wall.setCollisionCategory(cat3);
-     level_9_bottom_wall = _scene.matter.add.sprite(width/2, 391, 'level 9 bottom wall');
-     level_9_bottom_wall2 = _scene.add.sprite(width/2, 398, 'level 9 bottom wall 2');
-     level_9_bottom_wall.body.label = 'wall';
-    level_9_bottom_wall.setCollisionCategory(cat3);
-    moveWall=0;
-  }
-  if(level==10)
-  {
-    boss = _scene.matter.add.sprite(width*.66, 200, 'boss');
-    boss.body.label = 'boss';
-    boss.setCollisionCategory(cat5);
-    boss.setFixedRotation();
+      // if(x1>=0)
+    //   x1-=WALL_WIDTH;
+    // if(x2>0)
+    //     x2-=WALL_WIDTH;
+    //var wall = new Phaser.Geom.Rectangle('create', x1, y1, x2-x1, y2-y1,0x0000ff,1);
+    //_scene.matter.add.rectangle(wall);
+    let wall = _scene.add.rectangle(x1, y1, x2-x1, y2-y1,WALL_COLOR,1);
+    _scene.matter.add.gameObject(wall);
+    
+     wall.body.label = 'wall';
+    wall.setCollisionCategory(cat3);
+    walls.add(wall);
   }
 }
 
@@ -605,60 +524,60 @@ function moveEnemies() {
   }
 }
 
-function resetOttoTimer(){
-  ottoTimer = (12-level) * OTTO_TIMER_LENGTH;
+function resetOTTOTimer(){
+  OTTOTimer = (12-level) * OTTO_TIMER_LENGTH;
 }
 
-function spawnOtto(){
-  otto = _scene.matter.add.sprite(xStart, 500, 'otto');
-  otto.setOrigin(0.5);
-  otto.body.label = 'otto';
-  otto.setCollisionCategory(cat5);
-  otto.setCollidesWith([cat5,cat1]);
-  otto.setCollidesWith([cat5,cat4]);
-  otto.setFixedRotation();
-  otto.setPosition(ottoXStart, ottoYStart);
-  ottoAlive = true;
+function spawnOTTO(){
+  OTTO = _scene.matter.add.sprite(xStart, 500, 'OTTO');
+  OTTO.setOrigin(0.5);
+  OTTO.body.label = 'OTTO';
+  OTTO.setCollisionCategory(cat5);
+  OTTO.setCollidesWith([cat5,cat1]);
+  OTTO.setCollidesWith([cat5,cat4]);
+  OTTO.setFixedRotation();
+  OTTO.setPosition(OTTOXStart, OTTOYStart);
+  OTTOAlive = true;
 }
 
-function killOtto(){
-  if(otto!=undefined){
-    otto.destroy();
-    _scene.matter.world.remove(otto);
-    ottoAlive = false;
-    resetOttoTimer();
+function killOTTO(){
+  if(OTTO!=undefined){
+    OTTO.destroy();
+    _scene.matter.world.remove(OTTO);
+    OTTOAlive = false;
+    resetOTTOTimer();
   }
 }
 function resetWalls(){
   level_9_top_wall.setPosition(width/2, 0);
-  level_9_bottom_wall.setPosition(width/2, 391);
+  level_9_bOTTOm_wall.setPosition(width/2, 391);
   level_9_top_wall2.scaleY=1;
-  level_9_bottom_wall2.scaleY=1;
-  level_9_bottom_wall2.y=398;
+  level_9_bOTTOm_wall2.scaleY=1;
+  level_9_bOTTOm_wall2.y=398;
   moveWall=0;
 }
 
-function moveOtto() {
-  if (player.x > otto.x || player.x < otto.x && otto.active)
-    otto.setVelocityX(1);
-  otto.setVelocityY(ottoYV);
-  otto.setDepth(1);
-  if (otto.x > 885){
-    killOtto();
+function moveOTTO() {
+  if (player.x > OTTO.x || player.x < OTTO.x && OTTO.active)
+    OTTO.setVelocityX(1);
+  OTTO.setVelocityY(OTTOYV);
+  OTTO.setDepth(1);
+  if (OTTO.x > 885){
+    killOTTO();
     return;
   }
-  if (Math.abs(ottoYPath - otto.y) < 20)
-    otto.setFrame(1);
+  if (Math.abs(OTTOYPath - OTTO.y) < 20)
+    OTTO.setFrame(1);
   else
-    otto.setFrame(0);
-  if (otto.y > ottoYPath)
-    ottoYV = -5;
-  ottoYV += .1;
+    OTTO.setFrame(0);
+  if (OTTO.y > OTTOYPath)
+    OTTOYV = -5;
+  OTTOYV += .1;
 
-  if (player.y > otto.y)
-    ottoYPath += .1;
-  if (player.y < otto.y)
-    ottoYPath -= .1;
+  if (player.y > OTTO.y)
+    OTTOYPath += .1;
+  if (player.y < OTTO.y)
+    OTTOYPath -= .1;
 
 }
 
@@ -670,7 +589,7 @@ function update() {
 //   if (player.x > 885) {
 //     // if (guardCount > 0){
 //     //   player.setPosition(xStart, yStart).setVelocityX(0).setVelocityY(0);
-//     //   killOtto();
+//     //   killOTTO();
 //      }
 //     else {
 // //       clearLevel(this);
@@ -679,7 +598,7 @@ function update() {
 //       buildLevel(level);
 // //      guardCount = numGuards = level + 4;
 // //      spawnEnemies(this);
-// //      killOtto();
+// //      killOTTO();
 //     }
 // //  }
 // if(level==9){
@@ -689,9 +608,9 @@ function update() {
 //   level_9_top_wall.y+=5;
 //   level_9_top_wall2.scaleY+=2.5;
   
-//   level_9_bottom_wall.y-=5;
-//   level_9_bottom_wall2.y-=2.5;
-//   level_9_bottom_wall2.scaleY+=2.5;
+//   level_9_bOTTOm_wall.y-=5;
+//   level_9_bOTTOm_wall2.y-=2.5;
+//   level_9_bOTTOm_wall2.scaleY+=2.5;
 //     moveWall=0;
 // }
 // }
@@ -702,16 +621,16 @@ function update() {
 //     player.tint = Math.random() * 0xffffff;
 //   }
 
-//   if (ottoTimer > 0){
-//     ottoTimer--;
+//   if (OTTOTimer > 0){
+//     OTTOTimer--;
 //   }
 
-//   if (ottoTimer == 0 && !ottoAlive) {
-//       spawnOtto();
+//   if (OTTOTimer == 0 && !OTTOAlive) {
+//       spawnOTTO();
 //   }
 
-//   if (otto!=undefined && otto.visible)
-//     moveOtto();
+//   if (OTTO!=undefined && OTTO.visible)
+//     moveOTTO();
 
 //    if(gameEnding || lives==0)
 //     {
@@ -765,7 +684,7 @@ if(gameOver)
   }
   player.setVelocityX(playerXSpeed);
   player.setVelocityY(playerYSpeed);
- //  updateStats();
+  updateStats();
 //   moveEnemies(this);
 }
 
@@ -803,9 +722,9 @@ function clearLevel() {
   if(level==9)
   {  
     level_9_top_wall.destroy();
-    level_9_bottom_wall.destroy();
+    level_9_bOTTOm_wall.destroy();
     _scene.matter.world.remove(level_9_top_wall);
-    _scene.matter.world.remove(level_9_bottom_wall);
+    _scene.matter.world.remove(level_9_bOTTOm_wall);
   }
 }
 
