@@ -2,9 +2,9 @@ const TITLE_WIDTH =145
 const TITLE_HEIGHT = 141;
 const WIDTH = 800;
 const HEIGHT = 560;
-const X_SCALE =WIDTH/5;
-const Y_SCALE = (HEIGHT-50)/3;
-const WALL_WIDTH =20;
+const X_SCALE =160;
+const Y_SCALE =160;
+const WALL_WIDTH =15;
 const HORIZON = HEIGHT/2;
 let stars;
 let player;

@@ -21,12 +21,12 @@ var config = {
 
 var game = new Phaser.Game(config);
 var _scene;
-var width, height;
+var game_width, game_height;
 
 function create() {
   _scene = this;
-  width = _scene.game.config.width;
-  height = _scene.game.config.height;
+  game_width = _scene.game.config.width;
+  game_height = _scene.game.config.height;
   if (!startGame) mainMenuCreate(this);
   else gameCreate();
 }
@@ -43,9 +43,10 @@ function gameCreate() {
   player.body.label = 'player';
   player.dying = false;
   player.shooting = false;
-   highScore = localStorage.getItem(localStorageName) == null ? 0 :
+  highScore = localStorage.getItem(localStorageName) == null ? 0 :
   localStorage.getItem(localStorageName);
 
+  _scene.matter.world.setBounds().disableGravity();
 
    _scene.anims.create({
     key: 'run',
@@ -82,8 +83,8 @@ function gameCreate() {
  // spawnEnemies();
  
   scoreText = _scene.add.text(
-    width * 0.31,
-    height * 0.9,
+    game_width * 0.31,
+    game_height * 0.9,
     'SCORE: 0', {
       fontFamily: 'Arial',
       fontSize: '18px',
@@ -92,8 +93,8 @@ function gameCreate() {
   );
 
   livesText = _scene.add.text(
-    width * 0.47,
-    height * 0.9,
+    game_width * 0.47,
+    game_height * 0.9,
     'LIVES: 3', {
       fontFamily: 'Arial',
       fontSize: '18px',
@@ -102,8 +103,8 @@ function gameCreate() {
   );
 
   levelText = _scene.add.text(
-    width * 0.6,
-    height * 0.9,
+    game_width * 0.6,
+    game_height * 0.9,
     'LEVEL: '+level, {
       fontFamily: 'Arial',
       fontSize: '18px',
@@ -175,7 +176,7 @@ function gameCreate() {
   _scene.input.on('gameobjectdown',onObjectClicked);
   _scene.matter.world.on('collisionstart', handleCollision);
 
-  gameOverText = _scene.add.image(width/2,height/2, 'game over');
+  gameOverText = _scene.add.image(game_width/2,game_height/2, 'game over');
   gameOverText.visible = false;
   gameOverText.setDepth(1);
 }
@@ -253,15 +254,15 @@ function destroyWorld(){
   gameEnding = true;
 }
 function setUpArrows(){
-  var y = height-10;
+  var y = game_height-10;
   for (let index = 0; index < arrows.length; index++) {
    var arrow = arrowStats[index];
    arrows[index] = _scene.add.image(0,0,'arrow');
    arrows[index].setOrigin(0.5).setScale(.25);
    arrows[index].xOffset = arrow.xOffset;  
    arrows[index].yOffSet = arrow.yOffset;  
-    arrows[index].x = 60+arrows[index].width*.25+40+arrow.xOffset;
-    arrows[index].y = y- arrows[index].width*.25+arrow.yOffset;
+    arrows[index].x = 60+arrows[index].game_width*.25+40+arrow.xOffset;
+    arrows[index].y = y- arrows[index].game_width*.25+arrow.yOffset;
     arrows[index].name= arrow.direction;
     arrows[index].setInteractive();
    arrows[index].angle =arrow.angle;  
@@ -395,7 +396,7 @@ else if (player.y >= guard.y+(guard.height/2)) {
 
 function spawnEnemies() {
    for (let index = 0; index < numGuards; index++) {
-    let x = Phaser.Math.Between(200, width - 50);
+    let x = Phaser.Math.Between(200, game_width - 50);
     let y = Phaser.Math.Between(50, 350);
     guards[index] = _scene.matter.add.sprite(x, y, 'guard');
     var guard = guards[index];
@@ -441,8 +442,7 @@ function fryPlayer() {
 }
 
 function buildLevel() {
-  _scene.matter.world.setBounds().disableGravity();
-  levelData = objectData['level_' + level];
+   levelData = objectData['level_' + level];
   player.tint = levelData[0].player_color;
   var wallCoords = levelData[0].walls;
     for (let index = 0; index < wallCoords.length; index+=4) {
@@ -450,29 +450,20 @@ function buildLevel() {
     var y1 = wallCoords[index+1] * Y_SCALE;
     var x2 = wallCoords[index+2] * X_SCALE;
     var y2 = wallCoords[index+3] * Y_SCALE;
-    if(y1==y2){
+    if(y1==y2) 
       y2+=WALL_WIDTH;
-     //if(x1>0) 
-     //   x1+=X_SCALE;
-        // if(x2>0) 
-        // x2+=X_SCALE;
-    }
-    else{
+    else 
       x2+=WALL_WIDTH;
-      // if(y1>0) 
-      //   y1+=Y_SCALE;
-      // y2+=Y_SCALE;
-    }
-      // if(x1>=0)
-    //   x1-=WALL_WIDTH;
-    // if(x2>0)
-    //     x2-=WALL_WIDTH;
-    //var wall = new Phaser.Geom.Rectangle('create', x1, y1, x2-x1, y2-y1,0x0000ff,1);
-    //_scene.matter.add.rectangle(wall);
-    let wall = _scene.add.rectangle(x1, y1, x2-x1, y2-y1,WALL_COLOR,1);
+    var width = x2-x1;
+    var height = y2-y1;
+    var x = x1+width/2;
+    var y = y1+height/2;
+    if(x>game_width)
+      x-=WALL_WIDTH;
+    let wall = _scene.add.rectangle(x, y, width, height, WALL_COLOR,1);
     _scene.matter.add.gameObject(wall);
-    
-     wall.body.label = 'wall';
+    wall.body.isStatic = true;
+    wall.body.label = 'wall';
     wall.setCollisionCategory(cat3);
     walls.add(wall);
   }
@@ -547,14 +538,6 @@ function killOTTO(){
     OTTOAlive = false;
     resetOTTOTimer();
   }
-}
-function resetWalls(){
-  level_9_top_wall.setPosition(width/2, 0);
-  level_9_bOTTOm_wall.setPosition(width/2, 391);
-  level_9_top_wall2.scaleY=1;
-  level_9_bOTTOm_wall2.scaleY=1;
-  level_9_bOTTOm_wall2.y=398;
-  moveWall=0;
 }
 
 function moveOTTO() {
