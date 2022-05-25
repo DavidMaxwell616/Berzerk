@@ -67,9 +67,9 @@ function gameCreate() {
   player.setFixedRotation();
   player.anims.load('run');
   player.setCollisionCategory(cat1);
- // player.setCollidesWith([cat1, cat2]);
- // player.setCollidesWith([cat1, cat3]);
- // player.setCollidesWith([cat1, cat4]);
+  player.setCollidesWith([cat1, cat2]);
+  player.setCollidesWith([cat1, cat3]);
+  player.setCollidesWith([cat1, cat4]);
   playerXSpeed = 0;
   playerYSpeed = 0;
   player.setDepth(1)
@@ -79,12 +79,12 @@ function gameCreate() {
   resetOTTOTimer();
   buildLevel();
 
-  guardCount = numGuards = level + 4;
- // spawnEnemies();
+  guardCount = numGuards = level + 9;
+  spawnEnemies();
  
   scoreText = _scene.add.text(
     game_width * 0.31,
-    game_height * 0.9,
+    game_height -30,
     'SCORE: 0', {
       fontFamily: 'Arial',
       fontSize: '18px',
@@ -94,8 +94,8 @@ function gameCreate() {
 
   livesText = _scene.add.text(
     game_width * 0.47,
-    game_height * 0.9,
-    'LIVES: 3', {
+    game_height -30,
+     'LIVES: 3', {
       fontFamily: 'Arial',
       fontSize: '18px',
       fill: '#eee',
@@ -104,8 +104,8 @@ function gameCreate() {
 
   levelText = _scene.add.text(
     game_width * 0.6,
-    game_height * 0.9,
-    'LEVEL: '+level, {
+    game_height -30,
+     'LEVEL: '+level, {
       fontFamily: 'Arial',
       fontSize: '18px',
       fill: '#eee',
@@ -396,8 +396,8 @@ else if (player.y >= guard.y+(guard.height/2)) {
 
 function spawnEnemies() {
    for (let index = 0; index < numGuards; index++) {
-    let x = Phaser.Math.Between(200, game_width - 50);
-    let y = Phaser.Math.Between(50, 350);
+    let x = Phaser.Math.Between(WALL_WIDTH, game_width - WALL_WIDTH);
+    let y = Phaser.Math.Between(WALL_WIDTH, game_height-60);
     guards[index] = _scene.matter.add.sprite(x, y, 'guard');
     var guard = guards[index];
  
@@ -405,21 +405,22 @@ function spawnEnemies() {
       key: 'guardRun',
       frames: _scene.anims.generateFrameNumbers('guard', {
         start: 0,
-        end: 1
+        end: 5
       }),
       frameRate: 10,
       repeat: -1
     });
-  //   guard.setFixedRotation();
-  //   guard.anims.load('guardRun');
-  //   guard.setCollisionCategory(cat4);
-  // //  guard.setCollidesWith([cat4,cat2]);
-  // //  guard.setCollidesWith([cat4,cat3]);
-  //   guard.anims.play('guardRun');
-  //   guard.body.dying = false;
-  //   guard.body.collideWorldBounds = true;
-  //   guard.setOrigin(0.5).setScale(xScale, yScale);
-  //   guard.body.label = 'guard';
+    guard.setFixedRotation();
+    guard.anims.load('guardRun');
+    guard.setCollisionCategory(cat4);
+  //  guard.setCollidesWith([cat4,cat2]);
+  //  guard.setCollidesWith([cat4,cat3]);
+    guard.anims.play('guardRun');
+    guard.body.dying = false;
+    guard.body.collideWorldBounds = true;
+    guard.setOrigin(0.5).setScale(xScale, yScale);
+    guard.body.label = 'guard';
+    guard.tint = levelData[0].guard_color;
   }
 }
 
@@ -668,7 +669,7 @@ if(gameOver)
   player.setVelocityX(playerXSpeed);
   player.setVelocityY(playerYSpeed);
   updateStats();
-//   moveEnemies(this);
+  moveEnemies(this);
 }
 
 function getPlayerShootFrame(){

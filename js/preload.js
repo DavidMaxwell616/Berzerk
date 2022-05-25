@@ -17,17 +17,17 @@ function preload() {
     frameHeight: 50
   }, );
 
-  // this.load.image('bullet', 'bullet.png');
+  this.load.image('bullet', 'bullet.png');
 
-  // this.load.spritesheet('otto', 'otto.png', {
-  //   frameWidth: 86,
-  //   frameHeight: 54
-  // }, );
+  this.load.spritesheet('otto', 'otto.png', {
+    frameWidth: 10,
+    frameHeight: 10
+  }, );
 
-  // this.load.spritesheet('guard', 'guard.png', {
-  //   frameWidth: 55,
-  //   frameHeight: 46
-  // }, );
+  this.load.spritesheet('guard', 'guard.png', {
+    frameWidth: 28,
+    frameHeight: 33
+  }, );
  
   this.load.path = '../assets/json/';
   this.load.json('levelData', 'level_data.json');
