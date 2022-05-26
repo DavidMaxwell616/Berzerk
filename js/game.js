@@ -39,7 +39,7 @@ function gameCreate() {
   walls = _scene.add.group()
   player = _scene.matter.add.sprite(xStart, yStart, 'player');
   player.setOrigin(0.5).setScale(.6);
-  //player.body.collideWorldBounds = true;
+  player.body.collideWorldBounds = true;
   player.body.label = 'player';
   player.dying = false;
   player.shooting = false;
@@ -69,11 +69,9 @@ function gameCreate() {
   player.setCollisionCategory(cat1);
   player.setCollidesWith([cat1, cat2]);
   player.setCollidesWith([cat1, cat3]);
-  player.setCollidesWith([cat1, cat4]);
   playerXSpeed = 0;
   playerYSpeed = 0;
   player.setDepth(1)
- // _scene.matter.world.setBounds(0, 0, width, height);
   maxxdaddy.visible = false;
 
   resetOTTOTimer();
@@ -185,9 +183,9 @@ function handleCollision(event){
     for (var i = 0; i < event.pairs.length; i++) {
       var bodyA = getRootBody(event.pairs[i].bodyA);
       var bodyB = getRootBody(event.pairs[i].bodyB);
-      //kill bullet when it hits an obstacle
-      if (bodyA.label == 'bullet' && bodyB.label == 'obstacle'
-          || bodyB.label == 'bullet' && bodyA.label == 'obstacle') {
+      //kill bullet when it hits a wall
+      if (bodyA.label == 'bullet' && bodyB.label == 'wall'
+          || bodyB.label == 'bullet' && bodyA.label == 'wall') {
         var bullet = bodyA.label=='bullet' ? bodyA : bodyB;
         if (bullet.gameObject != null)
      {   bullet.gameObject.destroy();
@@ -205,8 +203,8 @@ function handleCollision(event){
           bullet.gameObject.destroy();
         _scene.matter.world.remove(bullet);
       } 
-      else if ((bodyA.label == 'player' && bodyB.label == 'obstacle') ||
-      (bodyB.label == 'player' && bodyA.label == 'obstacle')) {
+      else if ((bodyA.label == 'player' && bodyB.label == 'wall') ||
+      (bodyB.label == 'player' && bodyA.label == 'wall')) {
         fryPlayer();
       } 
       else if (bodyA.label == 'player' && bodyB.label == 'guard' ||
@@ -233,13 +231,9 @@ function handleCollision(event){
       || bodyB.label == 'OTTO' && bodyA.label == 'player' ) {
         fryPlayer();
         }
-     //else if (bodyA.label == 'player' && bodyB.label == 'wall') {
-      //   fryPlayer();
-      //   resetWalls();
-      // }
-      // else if (bodyA.label == 'boss' && bodyB.label == 'bullet') {
-      //  destroyWorld();
-      //   }
+     else if (bodyA.label == 'player' && bodyB.label == 'wall') {
+        fryPlayer();
+      }
     }
 }
 function destroyWorld(){
@@ -391,7 +385,6 @@ else if (player.y >= guard.y+(guard.height/2)) {
   bullet.rotation = angle;
   bullet.setFrictionAir(0);
   bullet.setCollisionCategory(cat2);
-  //bullet.setCollidesWith([cat2,cat4]);
 }
 
 function spawnEnemies() {
@@ -411,21 +404,18 @@ function spawnEnemies() {
       repeat: -1
     });
     guard.setFixedRotation();
-    guard.anims.load('guardRun');
     guard.setCollisionCategory(cat4);
-  //  guard.setCollidesWith([cat4,cat2]);
-  //  guard.setCollidesWith([cat4,cat3]);
     guard.anims.play('guardRun');
     guard.body.dying = false;
     guard.body.collideWorldBounds = true;
     guard.setOrigin(0.5).setScale(xScale, yScale);
     guard.body.label = 'guard';
-    guard.tint = levelData[0].guard_color;
+    guard.tint = levelData[0].enemy_color;
   }
 }
 
 function updateStats() {
-  levelText.setText('LIVES: ' + level);
+  levelText.setText('LEVEL: ' + level);
   scoreText.setText('SCORE: ' + score);
   livesText.setText('LIVES: ' + lives);
 }
@@ -466,8 +456,19 @@ function buildLevel() {
     wall.body.isStatic = true;
     wall.body.label = 'wall';
     wall.setCollisionCategory(cat3);
+//    wall.setCollidesWith([cat3, cat1]);
     walls.add(wall);
   }
+  var width = WALL_WIDTH;
+  var height = Y_SCALE;
+  let wall = _scene.add.rectangle(entranceX, entranceY, width, height, levelData[0].enemy_color,1);
+  _scene.matter.add.gameObject(wall);
+    wall.body.isStatic = true;
+    wall.body.label = 'wall';
+    wall.setCollisionCategory(cat3);
+    walls.add(wall);
+
+
 }
 
 function getRootBody(body) {
@@ -585,19 +586,7 @@ function update() {
 // //      killOTTO();
 //     }
 // //  }
-// if(level==9){
-//   moveWall++;
-//   if(moveWall>50)
-// {
-//   level_9_top_wall.y+=5;
-//   level_9_top_wall2.scaleY+=2.5;
-  
-//   level_9_bOTTOm_wall.y-=5;
-//   level_9_bOTTOm_wall2.y-=2.5;
-//   level_9_bOTTOm_wall2.scaleY+=2.5;
-//     moveWall=0;
-// }
-// }
+
 //   if (player.dying) {
 //     player.anims.pause(player.anims.currentAnim.frames[0]);
 //     playerXSpeed = 0;

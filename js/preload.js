@@ -25,7 +25,7 @@ function preload() {
   }, );
 
   this.load.spritesheet('guard', 'guard.png', {
-    frameWidth: 28,
+    frameWidth: 24,
     frameHeight: 33
   }, );
  

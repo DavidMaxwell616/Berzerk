@@ -54,7 +54,8 @@ let walls;
 let highScore = 0;
 var localStorageName = "berzerk";
 var OTTOAlive = false;
-
+var entranceX = WALL_WIDTH/2;
+var entranceY = HEIGHT/2-WALL_WIDTH*2;
 let playerXSpeed = 0;
 let playerYSpeed = 0;
 const textFrames = {
