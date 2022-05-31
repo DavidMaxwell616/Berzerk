@@ -8,7 +8,7 @@ function mainMenuCreate(scene) {
     var star = _scene.add.sprite(rx,ry,'star');
     stars.add(star);
   }
-  title = scene.add.sprite(width/2, height/2, 'title');
+  title = scene.add.sprite(width/2, height/2+40, 'title');
   title.setOrigin(.5);
   maxxdaddy = scene.add.image(width * 0.9, height * 0.87, 'maxxdaddy');
   highScore = localStorage.getItem(localStorageName) == null ? 0 :

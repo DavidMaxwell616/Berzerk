@@ -1,5 +1,3 @@
-const TITLE_WIDTH =145
-const TITLE_HEIGHT = 141;
 const WIDTH = 800;
 const HEIGHT = 540;
 const X_SCALE =160;
