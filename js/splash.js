@@ -10,13 +10,13 @@ function mainMenuCreate(scene) {
   }
   title = scene.add.sprite(width/2, height/2+40, 'title');
   title.setOrigin(.5);
-  maxxdaddy = scene.add.image(width * 0.9, height * 0.87, 'maxxdaddy');
+  maxxdaddy = scene.add.image(width * 0.9, height * 0.9, 'maxxdaddy');
   highScore = localStorage.getItem(localStorageName) == null ? 0 :
   localStorage.getItem(localStorageName);
 
   highScoreText = _scene.add.text(
-    width * 0.05,
-    height * 0.83,
+    width * 0.02,
+    height * 0.88,
     'HIGH SCORE: ' + highScore, {
       fontFamily: 'Arial',
       fontSize: '32px',

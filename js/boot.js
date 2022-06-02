@@ -29,6 +29,7 @@ let maxxdaddy;
 let curScore = 0;
 let textTimer;
 let guards = [];
+let explodingGuards;
 let OTTO;
 var OTTOYV = -5;
 var OTTOYVV = 0;

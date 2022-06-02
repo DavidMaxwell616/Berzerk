@@ -14,7 +14,7 @@ var config = {
       gravity: {
         y: 0,
       },
-      debug: true,
+      debug: false,
     },
   },
 };
@@ -264,14 +264,21 @@ function setUpArrows(){
 }
 function killGuard(guard)
 {
-  guard.dying = true;
-  _scene.time.delayedCall(500, () => {
-    if (guard.gameObject != null)
-      guard.gameObject.destroy();
-    _scene.matter.world.remove(guard);
-    guardCount--;
-    score += 50;
+  var explodingGuard = _scene.matter.add.sprite(guard.position.x, guard.position.y, 'guard_explode');
+  explodingGuard.anims.play('guardExplode');
+  explodingGuard.tint = levelData[0].enemy_color;
+  guard.gameObject.destroy();
+  _scene.matter.world.remove(guard);
+  explodingGuard.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
+      explodingGuard.destroy();
+      _scene.matter.world.remove(explodingGuard);
+      guardCount--;
+      score += 50;
   });
+}
+
+function removeGuard(guard){
+console.log('test');
 }
 function setFrame(xv, yv) {
   if (yv == 0 && xv != 0)
@@ -403,10 +410,19 @@ function spawnEnemies() {
       frameRate: 10,
       repeat: -1
     });
+    _scene.anims.create({
+      key: 'guardExplode',
+      frames: _scene.anims.generateFrameNumbers('guard_explode', {
+        start: 0,
+        end: 3
+      }),
+      frameRate: 10,
+      repeat: 0
+    });
+
     guard.setFixedRotation();
     guard.setCollisionCategory(cat4);
     guard.anims.play('guardRun');
-    guard.body.dying = false;
     guard.body.collideWorldBounds = true;
     guard.setOrigin(0.5).setScale(xScale, yScale);
     guard.body.label = 'guard';
@@ -487,11 +503,6 @@ function moveEnemies() {
     if (guard.active) {
       var guardXMove = 0;
       var guardYMove = 0;
-      if (guard.body.dying) {
-        guard.anims.pause(guard.anims.currentAnim.frames[8]);
-        guard.setFrame(8);
-        return;
-      }
       if (player.y < guard.y)
         guardYMove = -1;
       else if (player.y > guard.y)

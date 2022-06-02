@@ -6,7 +6,6 @@ function preload() {
 
   showLoader(this);
   this.load.path = '../assets/images/';
-  //this.load.image('splash', '125848.png');
   this.load.image('title', 'title.png');
   //this.load.image('arrow', 'arrow.png');
   this.load.image('maxxdaddy', 'maxxdaddy.gif');
@@ -25,8 +24,13 @@ function preload() {
   }, );
 
   this.load.spritesheet('guard', 'guard.png', {
-    frameWidth: 24,
-    frameHeight: 33
+    frameWidth: 36,
+    frameHeight: 52
+  }, );
+ 
+  this.load.spritesheet('guard_explode', 'guard_explode.png', {
+    frameWidth: 74,
+    frameHeight: 74
   }, );
  
   this.load.path = '../assets/json/';
