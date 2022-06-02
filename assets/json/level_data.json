@@ -24,7 +24,7 @@
   ],
   "level_2": [{
     "player_color": "0x00DC03",
-    "enemy_color": "0x6C6501",
+    "enemy_color": "0xFF1500",
     "walls": [
         0,0,2,0,
         3,0,5,0,
@@ -45,7 +45,7 @@
   ],
 "level_3": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0xFF1500",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -66,7 +66,7 @@
 ],
 "level_4": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0x01626C",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -87,7 +87,7 @@
 ],
 "level_5": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0x01626C",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -108,7 +108,7 @@
 ],
 "level_6": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0x01626C",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -130,7 +130,7 @@
 ],
 "level_7": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0x00D501",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -150,7 +150,7 @@
 ],
 "level_8": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0x00D501",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -171,7 +171,7 @@
 ],
 "level_9": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0x00D501",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -192,7 +192,7 @@
 ],
 "level_10": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0x73126C",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -215,7 +215,7 @@
 ],
 "level_11": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0x73126C",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -237,7 +237,7 @@
 ],
 "level_12": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0xFCEC03",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -258,7 +258,7 @@
 ],
 "level_13": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0xFCEC03",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -279,7 +279,7 @@
 ],
 "level_14": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0xFCEC03",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -300,7 +300,7 @@
 ],
 "level_15": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0xFCEC03",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -321,7 +321,7 @@
 ],
 "level_16": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0xFDFCFD",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -342,7 +342,7 @@
 ],
 "level_17": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0xFDFCFD",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -363,7 +363,7 @@
 ],
 "level_18": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0xFDFCFD",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -384,7 +384,7 @@
 ],
 "level_19": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0xFDFCFD",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -404,7 +404,7 @@
 }
 ],
 "level_20": [{
-  "player_color": "0x00DC03",
+  "player_color": "0x006372",
   "enemy_color": "0x6C6501",
   "walls": [
     0,0,2,0,
@@ -426,7 +426,7 @@
 ],
 "level_21": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0x006372",
   "walls": [
     0,0,2,0,
     3,0,5,0,
@@ -447,7 +447,7 @@
 ],
 "level_22": [{
   "player_color": "0x00DC03",
-  "enemy_color": "0x6C6501",
+  "enemy_color": "0x006372",
   "walls": [
     0,0,2,0,
     3,0,5,0,

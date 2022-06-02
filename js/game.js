@@ -582,21 +582,15 @@ function update() {
     mainMenuUpdate();
     return;
   }
-//   if (player.x > 885) {
-//     // if (guardCount > 0){
-//     //   player.setPosition(xStart, yStart).setVelocityX(0).setVelocityY(0);
-//     //   killOTTO();
-//      }
-//     else {
-// //       clearLevel(this);
-//       player.setPosition(xStart, yStart);
-//       level++;
-//       buildLevel(level);
-// //      guardCount = numGuards = level + 4;
-// //      spawnEnemies(this);
-// //      killOTTO();
-//     }
-// //  }
+  if (player.x > game_width || player.x<0 || player.y>game_height-60 || player.y<0) {
+      clearLevel(this);
+      player.setPosition(xStart, yStart);
+      level++;
+      buildLevel(level);
+      guardCount = numGuards = level + 9;
+      spawnEnemies(this);
+      killOTTO();
+    }
 
 //   if (player.dying) {
 //     player.anims.pause(player.anims.currentAnim.frames[0]);
@@ -697,19 +691,10 @@ if(bulletDirection.xv<0)
 }
 
 function clearLevel() {
-  return;
-  polygons.children.each(object => {
+  walls.children.each(object => {
     object.destroy();
     _scene.matter.world.remove(object);
    })
-  levelBkgd.visible = false;
-  if(level==9)
-  {  
-    level_9_top_wall.destroy();
-    level_9_bOTTOm_wall.destroy();
-    _scene.matter.world.remove(level_9_top_wall);
-    _scene.matter.world.remove(level_9_bOTTOm_wall);
-  }
 }
 
 function restart() {
