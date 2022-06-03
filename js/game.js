@@ -137,9 +137,9 @@ function gameCreate() {
     Fire();
   }, _scene);
 
-  // _scene.input.keyboard.on('keyup_SPACE', function (event) {
-  //   shooting = false;
-  // });
+  _scene.input.keyboard.on('keyup_SPACE', function (event) {
+    shooting = false;
+  });
 
   function onObjectClicked(pointer,gameObject){
     
@@ -278,8 +278,8 @@ function killGuard(guard)
 }
 
 function removeGuard(guard){
-console.log('test');
 }
+
 function setFrame(xv, yv) {
   if (yv == 0 && xv != 0)
     return 0;
@@ -382,7 +382,6 @@ else if (player.y >= guard.y+(guard.height/2)) {
     yOffset = -guard.height / 2;
   }
 
-  //  console.log(guard.body.id, bulletDirection);
   bullet.setVelocityX(xBulletSpeed * Math.sin(Math.abs(bulletDirection)));
   bullet.setVelocityY(yBulletSpeed * Math.cos(Math.abs(bulletDirection)));
   // offsetY = direction.yv * 4;
@@ -541,6 +540,7 @@ function spawnOTTO(){
   OTTO.setCollidesWith([cat5,cat4]);
   OTTO.setFixedRotation();
   OTTO.setPosition(OTTOXStart, OTTOYStart);
+  OTTO.tint = levelData[0].enemy_color;
   OTTOAlive = true;
 }
 
@@ -557,16 +557,19 @@ function moveOTTO() {
   if (player.x > OTTO.x || player.x < OTTO.x && OTTO.active)
     OTTO.setVelocityX(1);
   OTTO.setVelocityY(OTTOYV);
+  
   OTTO.setDepth(1);
-  if (OTTO.x > 885){
+  if (OTTO.x > game_width){
     killOTTO();
     return;
   }
-  if (Math.abs(OTTOYPath - OTTO.y) < 20)
-    OTTO.setFrame(1);
+  if (Math.abs(OTTOYPath - OTTO.y) < 20){
+    OTTO.setFrame(6);
+  }
   else
-    OTTO.setFrame(0);
-  if (OTTO.y > OTTOYPath)
+    OTTO.setFrame(7);
+  
+    if (OTTO.y > OTTOYPath)
     OTTOYV = -5;
   OTTOYV += .1;
 
@@ -582,7 +585,11 @@ function update() {
     mainMenuUpdate();
     return;
   }
-  if (player.x > game_width || player.x<0 || player.y>game_height-60 || player.y<0) {
+  if (playerOutOfBounds()) {
+    if(player.x>game.width) {xStart=40; yStart=240;}
+    else if(player.x<0) {xStart=width-40; yStart=240;}
+    else if(player.y>game.height-40) {xStart=game_width/2; yStart=40;}
+    else if(player.y<0) {xStart=game_width/2; yStart = game.height-40;}
       clearLevel(this);
       player.setPosition(xStart, yStart);
       level++;
@@ -599,16 +606,16 @@ function update() {
 //     player.tint = Math.random() * 0xffffff;
 //   }
 
-//   if (OTTOTimer > 0){
-//     OTTOTimer--;
-//   }
+  if (OTTOTimer > 0){
+    OTTOTimer--;
+  }
 
-//   if (OTTOTimer == 0 && !OTTOAlive) {
-//       spawnOTTO();
-//   }
+  if (OTTOTimer == 0 && !OTTOAlive) {
+      spawnOTTO();
+  }
 
-//   if (OTTO!=undefined && OTTO.visible)
-//     moveOTTO();
+  if (OTTO!=undefined && OTTO.visible)
+    moveOTTO();
 
 //    if(gameEnding || lives==0)
 //     {
@@ -688,6 +695,10 @@ else
 if(bulletDirection.xv<0)
   player.flipX = true;
 }
+}
+
+function playerOutOfBounds(){
+  return player.x > game_width || player.x<0 || player.y>game_height-60 || player.y<0;
 }
 
 function clearLevel() {

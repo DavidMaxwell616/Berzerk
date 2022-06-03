@@ -18,9 +18,9 @@ function preload() {
 
   this.load.image('bullet', 'bullet.png');
 
-  this.load.spritesheet('otto', 'otto.png', {
-    frameWidth: 10,
-    frameHeight: 10
+  this.load.spritesheet('OTTO', 'otto.png', {
+    frameWidth: 36,
+    frameHeight: 36
   }, );
 
   this.load.spritesheet('guard', 'guard.png', {
