@@ -266,7 +266,7 @@ function killGuard(guard)
 {
   var explodingGuard = _scene.matter.add.sprite(guard.position.x, guard.position.y, 'guard_explode');
   explodingGuard.anims.play('guardExplode');
-  explodingGuard.tint = levelData[0].enemy_color;
+  explodingGuard.tint = levelData.enemy_color;
   guard.gameObject.destroy();
   _scene.matter.world.remove(guard);
   explodingGuard.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
@@ -425,7 +425,7 @@ function spawnEnemies() {
     guard.body.collideWorldBounds = true;
     guard.setOrigin(0.5).setScale(xScale, yScale);
     guard.body.label = 'guard';
-    guard.tint = levelData[0].enemy_color;
+    guard.tint = levelData.enemy_color;
   }
 }
 
@@ -448,9 +448,9 @@ function fryPlayer() {
 }
 
 function buildLevel() {
-   levelData = objectData['level_' + level];
-  player.tint = levelData[0].player_color;
-  var wallCoords = levelData[0].walls;
+   levelData = objectData['level_' + level][0];
+  player.tint = levelData.player_color;
+  var wallCoords = levelData.walls;
     for (let index = 0; index < wallCoords.length; index+=4) {
     var x1 = wallCoords[index] * X_SCALE;
     var y1 = wallCoords[index+1] * Y_SCALE;
@@ -476,7 +476,7 @@ function buildLevel() {
   }
   var width = WALL_WIDTH;
   var height = Y_SCALE;
-  let wall = _scene.add.rectangle(entranceX, entranceY, width, height, levelData[0].enemy_color,1);
+  let wall = _scene.add.rectangle(entranceX, entranceY, width, height, levelData.enemy_color,1);
   _scene.matter.add.gameObject(wall);
     wall.body.isStatic = true;
     wall.body.label = 'wall';
@@ -540,7 +540,7 @@ function spawnOTTO(){
   OTTO.setCollidesWith([cat5,cat4]);
   OTTO.setFixedRotation();
   OTTO.setPosition(OTTOXStart, OTTOYStart);
-  OTTO.tint = levelData[0].enemy_color;
+  OTTO.tint = levelData.enemy_color;
   OTTOAlive = true;
 }
 
