@@ -33,6 +33,7 @@ let explodingGuards;
 let playerExit = 0;
 let OTTO;
 var OTTOYV = -5;
+var OTTOXV = 1;
 var OTTOYVV = 0;
 var OTTOXStart = 40;
 var OTTOYStart = 200;

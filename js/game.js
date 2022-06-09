@@ -37,7 +37,7 @@ function gameCreate() {
   lives = 3;
   objectData = _scene.cache.json.get('levelData');
   walls = _scene.add.group()
-  player = _scene.matter.add.sprite(xStart, yStart, 'player');
+  player = _scene.matter.add.sprite(0,0, 'player');
   player.setOrigin(0.5).setScale(.6);
   player.body.collideWorldBounds = true;
   player.body.label = 'player';
@@ -482,8 +482,26 @@ function buildLevel() {
     wall.body.label = 'wall';
     wall.setCollisionCategory(cat3);
     walls.add(wall);
-
-
+    switch (playerExit) {
+  case 0:
+    player.x= xStart;
+    player.y = yStart;
+  break;
+  case 1:
+    player.x= game_width/2;
+    player.y = 50;
+  break;
+  case 2:
+    player.x= 50;
+    player.y = 240;
+  break;
+  case 3:
+    player.x= game_width/2;
+    player.y = 50;
+  break;
+  default:
+    break;
+}
 }
 
 function getRootBody(body) {
@@ -532,7 +550,7 @@ function resetOTTOTimer(){
 }
 
 function spawnOTTO(){
-  OTTO = _scene.matter.add.sprite(xStart, 500, 'OTTO');
+  OTTO = _scene.matter.add.sprite(xStart, yStart, 'OTTO');
   OTTO.setOrigin(0.5);
   OTTO.body.label = 'OTTO';
   OTTO.setCollisionCategory(cat5);
@@ -554,29 +572,31 @@ function killOTTO(){
 }
 
 function moveOTTO() {
-  if (player.x > OTTO.x || player.x < OTTO.x && OTTO.active)
-    OTTO.setVelocityX(1);
-  OTTO.setVelocityY(OTTOYV);
-  
   OTTO.setDepth(1);
   if (OTTO.x > game_width){
     killOTTO();
     return;
   }
-  if (Math.abs(OTTOYPath - OTTO.y) < 20){
+  if (Math.abs(OTTOYPath - OTTO.y) < 12){
     OTTO.setFrame(6);
   }
   else
     OTTO.setFrame(7);
   
-    if (OTTO.y > OTTOYPath)
+  if (OTTO.y > OTTOYPath)
     OTTOYV = -5;
   OTTOYV += .1;
 
   if (player.y > OTTO.y)
-    OTTOYPath += .1;
-  if (player.y < OTTO.y)
-    OTTOYPath -= .1;
+    OTTOYPath += .5;
+  else if (player.y < OTTO.y)
+    OTTOYPath -= .5;
+  if (player.x > OTTO.x)
+    OTTO.x += .8;
+  if (player.x < OTTO.x)
+    OTTO.x -= .8;
+    
+    OTTO.setVelocityY(OTTOYV);
 
 }
 
@@ -586,10 +606,6 @@ function update() {
     return;
   }
   if (playerOutOfBounds()) {
-    if(player.x>game.width) {xStart=40; yStart=240;}
-    else if(player.x<0) {xStart=width-40; yStart=240;}
-    else if(player.y>game.height-40) {xStart=game_width/2; yStart=40;}
-    else if(player.y<0) {xStart=game_width/2; yStart = game.height-40;}
       clearLevel(this);
       player.setPosition(xStart, yStart);
       level++;
@@ -698,7 +714,25 @@ if(bulletDirection.xv<0)
 }
 
 function playerOutOfBounds(){
-  return player.x > game_width || player.x<0 || player.y>game_height-60 || player.y<0;
+  if(player.x > game_width){
+    playerExit = 2;
+    return true;
+  }
+  else if(player.x<0){
+    playerExit = 0;
+    return true;
+  } 
+  else if(player.y>game_height-40)
+  {
+    playerExit = 3;
+    return true;
+  } 
+  else if(player.y<0)
+  {
+  playerExit = 2;
+  return true;
+  }
+  return false;
 }
 
 function clearLevel() {
