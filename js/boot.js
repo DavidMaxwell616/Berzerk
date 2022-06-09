@@ -1,5 +1,6 @@
 const WIDTH = 800;
 const HEIGHT = 540;
+const SCOREBOARD_HEIGHT = 20;
 const X_SCALE =160;
 const Y_SCALE =160;
 const WALL_WIDTH =10;

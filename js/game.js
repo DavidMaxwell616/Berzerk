@@ -192,7 +192,7 @@ function handleCollision(event){
         _scene.matter.world.remove(bullet);
       }
     } 
-      //bullet hits guard
+//bullet hits guard
       else if (bodyA.label == 'bullet' && bodyB.label == 'guard'
       ||
       bodyB.label == 'bullet' && bodyA.label == 'guard') {
@@ -396,7 +396,7 @@ else if (player.y >= guard.y+(guard.height/2)) {
 function spawnEnemies() {
    for (let index = 0; index < numGuards; index++) {
     let x = Phaser.Math.Between(WALL_WIDTH, game_width - WALL_WIDTH);
-    let y = Phaser.Math.Between(WALL_WIDTH, game_height-60);
+    let y = Phaser.Math.Between(WALL_WIDTH, game_height-SCOREBOARD_HEIGHT);
     guards[index] = _scene.matter.add.sprite(x, y, 'guard');
     var guard = guards[index];
  
@@ -475,8 +475,10 @@ function buildLevel() {
   }
   var width = WALL_WIDTH;
   var height = Y_SCALE;
-  let wall = _scene.add.rectangle(entranceX, entranceY, width, height, levelData.enemy_color,1);
-  _scene.matter.add.gameObject(wall);
+  var wallX = 0;
+  var wallY = game_height/2-SCOREBOARD_HEIGHT;
+  let wall = _scene.add.rectangle(wallX+WALL_WIDTH/2, wallY, width, height, levelData.enemy_color,1);
+    _scene.matter.add.gameObject(wall);
     wall.body.isStatic = true;
     wall.body.label = 'wall';
     wall.setCollisionCategory(cat3);
@@ -488,7 +490,7 @@ function buildLevel() {
   break;
   case 1:
     player.x= game_width/2;
-    player.y = game_height-100;
+    player.y = game_height-SCOREBOARD_HEIGHT-20;
   break;
   case 2:
     player.x= 50;
@@ -721,7 +723,7 @@ function playerOutOfBounds(){
     playerExit = 0;
     return true;
   } 
-  else if(player.y>game_height-40)
+  else if(player.y>game_height-SCOREBOARD_HEIGHT)
   {
     playerExit = 3;
     return true;
