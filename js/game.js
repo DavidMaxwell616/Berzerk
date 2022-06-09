@@ -471,7 +471,6 @@ function buildLevel() {
     wall.body.isStatic = true;
     wall.body.label = 'wall';
     wall.setCollisionCategory(cat3);
-//    wall.setCollidesWith([cat3, cat1]);
     walls.add(wall);
   }
   var width = WALL_WIDTH;
@@ -489,7 +488,7 @@ function buildLevel() {
   break;
   case 1:
     player.x= game_width/2;
-    player.y = 50;
+    player.y = game_height-100;
   break;
   case 2:
     player.x= 50;
@@ -729,7 +728,7 @@ function playerOutOfBounds(){
   } 
   else if(player.y<0)
   {
-  playerExit = 2;
+  playerExit = 1;
   return true;
   }
   return false;
