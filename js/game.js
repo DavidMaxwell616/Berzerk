@@ -267,7 +267,8 @@ function killGuard(guard)
   var explodingGuard = _scene.matter.add.sprite(guard.position.x, guard.position.y, 'guard_explode');
   explodingGuard.anims.play('guardExplode');
   explodingGuard.tint = levelData.enemy_color;
-  guard.gameObject.destroy();
+  if(guard.gameObject!=null)
+    guard.gameObject.destroy();
   _scene.matter.world.remove(guard);
   explodingGuard.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
       explodingGuard.destroy();
@@ -473,11 +474,39 @@ function buildLevel() {
     wall.setCollisionCategory(cat3);
     walls.add(wall);
   }
-  var width = WALL_WIDTH;
-  var height = Y_SCALE;
+  var x,y,w,h;
+  switch (playerExit) {
+    case 0:
+      x=game_width-WALL_WIDTH/2;
+      y=246;
+      w=WALL_WIDTH;
+      h=150;
+    break;
+    case 1:
+      x=game_width/2-WALL_WIDTH/2;
+      y=game_height-SCOREBOARD_HEIGHT-WALL_WIDTH/2;
+      w=170;
+      h=WALL_WIDTH;
+    break;
+    case 2:
+      x=WALL_WIDTH/2;
+      y=246;
+      w=WALL_WIDTH;
+      h=150;
+      break;
+    case 3:
+      x=game_width/2-WALL_WIDTH/2;
+      y=WALL_WIDTH/2;
+      w=170;
+      h=WALL_WIDTH;
+      break;
+    default:
+      break;
+  }
+  
   var wallX = 0;
   var wallY = game_height/2-SCOREBOARD_HEIGHT;
-  let wall = _scene.add.rectangle(wallX+WALL_WIDTH/2, wallY, width, height, levelData.enemy_color,1);
+  let wall = _scene.add.rectangle(x,y,w,h, levelData.enemy_color,1);
     _scene.matter.add.gameObject(wall);
     wall.body.isStatic = true;
     wall.body.label = 'wall';

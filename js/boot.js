@@ -1,6 +1,6 @@
 const WIDTH = 800;
 const HEIGHT = 540;
-const SCOREBOARD_HEIGHT = 20;
+const SCOREBOARD_HEIGHT = 50;
 const X_SCALE =160;
 const Y_SCALE =160;
 const WALL_WIDTH =10;
@@ -31,7 +31,7 @@ let curScore = 0;
 let textTimer;
 let guards = [];
 let explodingGuards;
-let playerExit = 0;
+let playerExit = 2;
 let OTTO;
 var OTTOYV = -5;
 var OTTOXV = 1;
