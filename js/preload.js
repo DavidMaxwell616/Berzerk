@@ -16,6 +16,11 @@ function preload() {
     frameHeight: 50
   }, );
 
+  this.load.spritesheet('fry_player', 'player_dying.png', {
+    frameWidth: 26,
+    frameHeight: 50 
+  }, );
+
   this.load.image('bullet', 'bullet.png');
 
   this.load.spritesheet('OTTO', 'otto.png', {

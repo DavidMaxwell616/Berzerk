@@ -14,6 +14,7 @@ let score = 0;
 let scoreText;
 let highScoreText;
 let lives = 3;
+let bullets = [];
 const OTTO_TIMER_LENGTH =50;
 let livesText;
 const START_LEVEL = 1;

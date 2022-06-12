@@ -274,7 +274,7 @@ function killGuard(guard)
       explodingGuard.destroy();
       _scene.matter.world.remove(explodingGuard);
       guardCount--;
-      score += 50;
+      score += 50 * level;
   });
 }
 
@@ -338,8 +338,10 @@ function shootBullet(bullet, direction) {
   bullet.setVelocityX(direction.xv);
   bullet.setVelocityY(direction.yv);
   bullet.setFrictionAir(0);
+  bullet.lifespan = 500;
   bullet.setCollisionCategory(cat2);
   setBulletAngle(bullet,direction);
+  bullets.push(bullet);
 }
 
 function setBulletAngle(bullet, direction){
@@ -437,10 +439,24 @@ function updateStats() {
 }
 
 function fryPlayer() {
-  if (GOD_MODE) return;
-  player.dying = true;
+ // if (GOD_MODE) return;
+ _scene.anims.create({
+  key: 'fry_Player',
+  frames: _scene.anims.generateFrameNumbers('fry_player', {
+    start: 0,
+    end: 3
+  }),
+  frameRate: 10,
+  repeat: 0
+});
+player.visible = false;
+var dyingPlayer = _scene.matter.add.sprite(player.x, player.y, 'fry_player');
+dyingPlayer.anims.play('fry_Player');
+
   _scene.time.delayedCall(500, () => {
-    player.dying = false;
+    player.visible = true;
+    dyingPlayer.destroy();
+    _scene.matter.world.remove(dyingPlayer);
     player.setPosition(xStart, yStart);
     player.tint = 0xffffff;
     lives--;
@@ -513,23 +529,23 @@ function buildLevel() {
     wall.setCollisionCategory(cat3);
     walls.add(wall);
     switch (playerExit) {
-  case 0:
-    player.x= xStart;
-    player.y = yStart;
-  break;
-  case 1:
-    player.x= game_width/2;
-    player.y = game_height-SCOREBOARD_HEIGHT-20;
-  break;
-  case 2:
-    player.x= 50;
-    player.y = 240;
-  break;
-  case 3:
-    player.x= game_width/2;
-    player.y = 50;
-  break;
-  default:
+      case 0:
+        player.x= game_width-50;
+        player.y = 240;
+      break;
+      case 1:
+        player.x= game_width/2;
+        player.y = game_height-SCOREBOARD_HEIGHT-20;
+      break;
+      case 2:
+        player.x= 50;
+        player.y = 240;
+      break;
+      case 3:
+        player.x= game_width/2;
+        player.y = 50;
+      break;
+      default:
     break;
 }
 }
@@ -651,6 +667,16 @@ function update() {
 //     playerYSpeed = 0;
 //     player.tint = Math.random() * 0xffffff;
 //   }
+bullets.forEach(bullet => {
+  bullet.lifespan--;
+  if(bullet.lifespan==0)
+  {
+    if (bullet.gameObject != null)
+      {   bullet.gameObject.destroy();
+          _scene.matter.world.remove(bullet);
+        }
+  }
+});
 
   if (OTTOTimer > 0){
     OTTOTimer--;
