@@ -30,7 +30,7 @@ let yScale = .8;
 let maxxdaddy;
 let curScore = 0;
 let textTimer;
-let guards = [];
+let guards;
 let explodingGuards;
 let playerExit = 2;
 let OTTO;

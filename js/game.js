@@ -38,11 +38,12 @@ function gameCreate() {
   objectData = _scene.cache.json.get('levelData');
   walls = _scene.add.group()
   player = _scene.matter.add.sprite(0,0, 'player');
-  player.setOrigin(0.5).setScale(.6);
+  player.setOrigin(0.5).setScale(.8);
   player.body.collideWorldBounds = true;
   player.body.label = 'player';
   player.dying = false;
   player.shooting = false;
+  guards = _scene.add.group()
   highScore = localStorage.getItem(localStorageName) == null ? 0 :
   localStorage.getItem(localStorageName);
 
@@ -304,6 +305,7 @@ function Fire(){
       shootBullet(bullet, bulletDirection);
   playerXSpeed = 0;
   playerYSpeed = 0;
+
   player.shooting = true;
 }
 
@@ -364,8 +366,7 @@ function guardShoot(guard) {
   var yOffset = 0;
   var xBulletSpeed = 5;
   var yBulletSpeed = 5;
-
-  bullet.setFixedRotation();
+   bullet.setFixedRotation();
   // Calculate X and y velocity of bullet to moves it from shooter to target
   if (player.x >= guard.x) {
     xOffset = guard.width / 2;
@@ -393,6 +394,7 @@ else if (player.y >= guard.y+(guard.height/2)) {
   let angle = Phaser.Math.Angle.Between(player.x, player.y, guard.x, guard.y);
   bullet.rotation = angle;
   bullet.setFrictionAir(0);
+  bullet.lifeSpan = 500;
   bullet.setCollisionCategory(cat2);
 }
 
@@ -400,8 +402,7 @@ function spawnEnemies() {
    for (let index = 0; index < numGuards; index++) {
     let x = Phaser.Math.Between(WALL_WIDTH, game_width - WALL_WIDTH);
     let y = Phaser.Math.Between(WALL_WIDTH, game_height-SCOREBOARD_HEIGHT);
-    guards[index] = _scene.matter.add.sprite(x, y, 'guard');
-    var guard = guards[index];
+    var guard = _scene.matter.add.sprite(x, y, 'guard');
  
     _scene.anims.create({
       key: 'guardRun',
@@ -429,6 +430,7 @@ function spawnEnemies() {
     guard.setOrigin(0.5).setScale(xScale, yScale);
     guard.body.label = 'guard';
     guard.tint = levelData.enemy_color;
+    guards.add(guard);
   }
 }
 
@@ -561,8 +563,7 @@ function getRootBody(body) {
 }
 
 function moveEnemies() {
-  for (let index = 0; index < guards.length; index++) {
-    var guard = guards[index];
+  guards.children.entries.forEach(guard => {
     if (guard.active) {
       var guardXMove = 0;
       var guardYMove = 0;
@@ -588,7 +589,7 @@ function moveEnemies() {
       }
       guard.setDepth(100);
     }
-  }
+  });
 }
 
 function resetOTTOTimer(){
@@ -660,18 +661,11 @@ function update() {
       spawnEnemies(this);
       killOTTO();
     }
-
-//   if (player.dying) {
-//     player.anims.pause(player.anims.currentAnim.frames[0]);
-//     playerXSpeed = 0;
-//     playerYSpeed = 0;
-//     player.tint = Math.random() * 0xffffff;
-//   }
 bullets.forEach(bullet => {
-  bullet.lifespan--;
-  if(bullet.lifespan==0)
-  {
-    if (bullet.gameObject != null)
+bullet.lifeSpan--;
+if(bullet.lifeSpan<1)
+{
+  if (bullet.gameObject != null)
       {   bullet.gameObject.destroy();
           _scene.matter.world.remove(bullet);
         }
@@ -792,10 +786,14 @@ function playerOutOfBounds(){
 }
 
 function clearLevel() {
-  walls.children.each(object => {
-    object.destroy();
-    _scene.matter.world.remove(object);
+  walls.children.each(wall => {
+    wall.destroy();
+    _scene.matter.world.remove(wall);
    })
+   guards.children.each(guard=>{
+    guard.destroy();
+    _scene.matter.world.remove(guard);
+   });
 }
 
 function restart() {

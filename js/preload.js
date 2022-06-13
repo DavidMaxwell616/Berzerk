@@ -12,7 +12,7 @@ function preload() {
   this.load.image('star', 'star.png');
  
   this.load.spritesheet('player', 'player.png', {
-    frameWidth: 30,
+    frameWidth: 26,
     frameHeight: 50
   }, );
 
