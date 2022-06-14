@@ -530,26 +530,29 @@ function buildLevel() {
     wall.body.label = 'wall';
     wall.setCollisionCategory(cat3);
     walls.add(wall);
+    
     switch (playerExit) {
       case 0:
-        player.x= game_width-50;
-        player.y = 240;
+        xStart = game_width-50;
+        yStart = 240;
       break;
       case 1:
-        player.x= game_width/2;
-        player.y = game_height-SCOREBOARD_HEIGHT-20;
+        xStart = game_width/2;
+        yStart = game_height-SCOREBOARD_HEIGHT-20;
       break;
       case 2:
-        player.x= 50;
-        player.y = 240;
+        xStart = 50;
+        yStart = 240;
       break;
       case 3:
-        player.x= game_width/2;
-        player.y = 50;
+        xStart = game_width/2;
+        yStart = 50;
       break;
       default:
     break;
 }
+player.x = xStart;
+player.y = yStart;
 }
 
 function getRootBody(body) {
