@@ -36,7 +36,8 @@ function gameCreate() {
   level = START_LEVEL;
   lives = 3;
   objectData = _scene.cache.json.get('levelData');
-  walls = _scene.add.group()
+  walls = _scene.add.group();
+  bullets = _scene.add.group();
   player = _scene.matter.add.sprite(0,0, 'player');
   player.setOrigin(0.5).setScale(.8);
   player.body.collideWorldBounds = true;
@@ -204,6 +205,15 @@ function handleCollision(event){
           bullet.gameObject.destroy();
         _scene.matter.world.remove(bullet);
       } 
+      else if (bodyA.label == 'bullet' && bodyB.label == 'explodingGuard'
+      ||
+      bodyB.label == 'bullet' && bodyA.label == 'explodingGuard') {
+        var guard = bodyA.label=='explodingGuard' ? bodyA : bodyB;
+        var bullet = bodyA.label=='bullet' ? bodyA : bodyB;
+        if (bullet.gameObject != null)
+          bullet.gameObject.destroy();
+        _scene.matter.world.remove(bullet);
+      } 
       else if ((bodyA.label == 'player' && bodyB.label == 'wall') ||
       (bodyB.label == 'player' && bodyA.label == 'wall')) {
         fryPlayer();
@@ -234,7 +244,19 @@ function handleCollision(event){
         }
      else if (bodyA.label == 'player' && bodyB.label == 'wall') {
         fryPlayer();
-      }
+     }
+     else if (bodyA.label == 'bullet' && bodyB.label == 'bullet') {
+      if (bodyA.gameObject != null){
+        bodyA.gameObject.destroy();
+        _scene.matter.world.remove(bodyA);
+        }
+        if (bodyB.gameObject != null){
+          bodyB.gameObject.destroy();
+          _scene.matter.world.remove(bodyB);
+          }
+  
+    }
+        
     }
 }
 function destroyWorld(){
@@ -268,7 +290,8 @@ function killGuard(guard)
   var explodingGuard = _scene.matter.add.sprite(guard.position.x, guard.position.y, 'guard_explode');
   explodingGuard.anims.play('guardExplode');
   explodingGuard.tint = levelData.enemy_color;
-  if(guard.gameObject!=null)
+  explodingGuard.body.label = 'explodingGuard';
+ if(guard.gameObject!=null)
     guard.gameObject.destroy();
   _scene.matter.world.remove(guard);
   explodingGuard.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
@@ -305,7 +328,6 @@ function Fire(){
       shootBullet(bullet, bulletDirection);
   playerXSpeed = 0;
   playerYSpeed = 0;
-
   player.shooting = true;
 }
 
@@ -340,10 +362,10 @@ function shootBullet(bullet, direction) {
   bullet.setVelocityX(direction.xv);
   bullet.setVelocityY(direction.yv);
   bullet.setFrictionAir(0);
-  bullet.lifespan = 500;
   bullet.setCollisionCategory(cat2);
   setBulletAngle(bullet,direction);
-  bullets.push(bullet);
+  bullets.add(bullet);
+
 }
 
 function setBulletAngle(bullet, direction){
@@ -394,8 +416,8 @@ else if (player.y >= guard.y+(guard.height/2)) {
   let angle = Phaser.Math.Angle.Between(player.x, player.y, guard.x, guard.y);
   bullet.rotation = angle;
   bullet.setFrictionAir(0);
-  bullet.lifeSpan = 500;
   bullet.setCollisionCategory(cat2);
+  bullets.add(bullet);
 }
 
 function spawnEnemies() {
@@ -432,6 +454,12 @@ function spawnEnemies() {
     guard.tint = levelData.enemy_color;
     guards.add(guard);
   }
+}
+
+function killBullet(bullet){
+    if(bullet.gameObject!=null)
+      bullet.gameObject.destroy();
+    _scene.matter.world.remove(bullet);
 }
 
 function updateStats() {
@@ -538,7 +566,7 @@ function buildLevel() {
       break;
       case 1:
         xStart = game_width/2;
-        yStart = game_height-SCOREBOARD_HEIGHT-20;
+        yStart = game_height-SCOREBOARD_HEIGHT-40;
       break;
       case 2:
         xStart = 50;
@@ -607,9 +635,9 @@ function spawnOTTO(){
   OTTO.setCollidesWith([cat5,cat1]);
   OTTO.setCollidesWith([cat5,cat4]);
   OTTO.setFixedRotation();
-  OTTO.setPosition(OTTOXStart, OTTOYStart);
   OTTO.tint = levelData.enemy_color;
   OTTOAlive = true;
+  OTTOYPath = yStart;
 }
 
 function killOTTO(){
@@ -623,7 +651,7 @@ function killOTTO(){
 
 function moveOTTO() {
   OTTO.setDepth(1);
-  if (OTTO.x > game_width){
+  if (OTTO.x > game_width || OTTO.x<0 || OTTO.y<0 || OTTO.y>game_height-SCOREBOARD_HEIGHT){
     killOTTO();
     return;
   }
@@ -664,17 +692,10 @@ function update() {
       spawnEnemies(this);
       killOTTO();
     }
-bullets.forEach(bullet => {
-bullet.lifeSpan--;
-if(bullet.lifeSpan<1)
-{
-  if (bullet.gameObject != null)
-      {   bullet.gameObject.destroy();
-          _scene.matter.world.remove(bullet);
-        }
-  }
-});
-
+  bullets.children.entries.forEach(bullet => {
+    if(bullet.x<0 || bullet.x>game_width || bullet.y<0 || bullet.y>game_height-SCOREBOARD_HEIGHT)
+      killBullet(bullet);
+  });
   if (OTTOTimer > 0){
     OTTOTimer--;
   }
