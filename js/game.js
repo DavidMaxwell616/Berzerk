@@ -423,7 +423,7 @@ else if (player.y >= guard.y+(guard.height/2)) {
 function spawnEnemies() {
    for (let index = 0; index < numGuards; index++) {
     let x = Phaser.Math.Between(WALL_WIDTH, game_width - WALL_WIDTH);
-    let y = Phaser.Math.Between(WALL_WIDTH, game_height-SCOREBOARD_HEIGHT);
+    let y = Phaser.Math.Between(WALL_WIDTH, game_height-SCOREBOARD_HEIGHT - WALL_WIDTH);
     var guard = _scene.matter.add.sprite(x, y, 'guard');
  
     _scene.anims.create({
