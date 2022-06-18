@@ -457,10 +457,10 @@ function spawnEnemies() {
 }
 
 function killBullet(bullet){
-    if(bullet.gameObject!=null)
-      bullet.gameObject.destroy();
+bullet.visible = false;
+  bullet.body.destroy();
     _scene.matter.world.remove(bullet);
-}
+  }
 
 function updateStats() {
   levelText.setText('LEVEL: ' + level);
@@ -693,8 +693,9 @@ function update() {
       killOTTO();
     }
   bullets.children.entries.forEach(bullet => {
-    if(bullet.x<0 || bullet.x>game_width || bullet.y<0 || bullet.y>game_height-SCOREBOARD_HEIGHT)
+    if(bullet.x<WALL_WIDTH || bullet.x>game_width-WALL_WIDTH || bullet.y<WALL_WIDTH || bullet.y>game_height-SCOREBOARD_HEIGHT-WALL_WIDTH){
       killBullet(bullet);
+     }
   });
   if (OTTOTimer > 0){
     OTTOTimer--;
