@@ -651,11 +651,7 @@ function killOTTO(){
 
 function moveOTTO() {
   OTTO.setDepth(1);
-  if (OTTO.x > game_width || OTTO.x<0)
-    OTTOXV = -OTTOXV;
-  if(OTTO.y<0 || OTTO.y>game_height-SCOREBOARD_HEIGHT)
-    OTTOYV = -OTTOYV;
-  
+ 
   if (Math.abs(OTTOYPath - OTTO.y) < 12){
     OTTO.setFrame(6);
   }
