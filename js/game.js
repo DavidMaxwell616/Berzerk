@@ -651,10 +651,11 @@ function killOTTO(){
 
 function moveOTTO() {
   OTTO.setDepth(1);
-  if (OTTO.x > game_width || OTTO.x<0 || OTTO.y<0 || OTTO.y>game_height-SCOREBOARD_HEIGHT){
-    killOTTO();
-    return;
-  }
+  if (OTTO.x > game_width || OTTO.x<0)
+    OTTOXV = -OTTOXV;
+  if(OTTO.y<0 || OTTO.y>game_height-SCOREBOARD_HEIGHT)
+    OTTOYV = -OTTOYV;
+  
   if (Math.abs(OTTOYPath - OTTO.y) < 12){
     OTTO.setFrame(6);
   }
@@ -670,10 +671,11 @@ function moveOTTO() {
   else if (player.y < OTTO.y)
     OTTOYPath -= .5;
   if (player.x > OTTO.x)
-    OTTO.x += .8;
+    OTTOXV = .8;
   if (player.x < OTTO.x)
-    OTTO.x -= .8;
+    OTTOXV = -.8;
     
+    OTTO.setVelocityX(OTTOXV);
     OTTO.setVelocityY(OTTOYV);
 
 }
