@@ -424,6 +424,8 @@ function spawnEnemies() {
    for (let index = 0; index < numGuards; index++) {
     let x = Phaser.Math.Between(WALL_WIDTH, game_width - WALL_WIDTH);
     let y = Phaser.Math.Between(WALL_WIDTH, game_height-SCOREBOARD_HEIGHT - WALL_WIDTH);
+    var distance = Phaser.Math.Distance.Between(xStart, yStart, x, y);
+if(distance>100){
     var guard = _scene.matter.add.sprite(x, y, 'guard');
  
     _scene.anims.create({
@@ -454,6 +456,7 @@ function spawnEnemies() {
     guard.tint = levelData.enemy_color;
     guards.add(guard);
   }
+}
 }
 
 function killBullet(bullet){
@@ -581,6 +584,7 @@ function buildLevel() {
 }
 player.x = xStart;
 player.y = yStart;
+resetOTTOTimer();
 }
 
 function getRootBody(body) {
