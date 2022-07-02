@@ -491,8 +491,7 @@ dyingPlayer.anims.play('fry_Player');
     dyingPlayer.destroy();
     _scene.matter.world.remove(dyingPlayer);
     player.setPosition(xStart, yStart);
-    player.tint = 0xffffff;
-    lives--;
+     lives--;
     killOTTO();
   });
 }
