@@ -50,7 +50,11 @@ let textTiles;
 let levelOver = false;
 let levelOverTimer = 0;
 let emitter;
-let cat = 5;
+let cat1;
+let cat2;
+let cat3;
+let cat4;
+let cat5;
 let walls;
 let highScore = 0;
 var localStorageName = "berzerk";
@@ -132,7 +136,7 @@ var arrowStats = [
   direction:'up',
   }  
   ];
-  var arrowDown=false;
+var arrowDown=false;
 const color = new Phaser.Display.Color();
 var gameoverText;
 var gameEnding = false;

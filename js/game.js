@@ -47,7 +47,7 @@ function gameCreate() {
   guards = _scene.add.group()
   highScore = localStorage.getItem(localStorageName) == null ? 0 :
   localStorage.getItem(localStorageName);
-
+	
   _scene.matter.world.setBounds().disableGravity();
 
    _scene.anims.create({
@@ -65,12 +65,11 @@ function gameCreate() {
   cat3 = _scene.matter.world.nextCategory();
   cat4 = _scene.matter.world.nextCategory();
   cat5 = _scene.matter.world.nextCategory();
-
+ 
   player.setFixedRotation();
   player.anims.load('run');
   player.setCollisionCategory(cat1);
-  player.setCollidesWith([cat1, cat2]);
-  player.setCollidesWith([cat1, cat3]);
+  player.setCollidesWith([cat2,cat3,cat4,cat5]);
   playerXSpeed = 0;
   playerYSpeed = 0;
   player.setDepth(1)
@@ -186,47 +185,59 @@ function handleCollision(event){
       var bodyA = getRootBody(event.pairs[i].bodyA);
       var bodyB = getRootBody(event.pairs[i].bodyB);
       //kill bullet when it hits a wall
-      if (bodyA.label == 'bullet' && bodyB.label == 'wall'
-          || bodyB.label == 'bullet' && bodyA.label == 'wall') {
-        var bullet = bodyA.label=='bullet' ? bodyA : bodyB;
+      if (bodyA.label.includes('bullet') && bodyB.label == 'wall'
+          || bodyB.label.includes('bullet') && bodyA.label == 'wall') {
+        var bullet = bodyA.label.includes('bullet') ? bodyA : bodyB;
         if (bullet.gameObject != null)
      {   bullet.gameObject.destroy();
         _scene.matter.world.remove(bullet);
       }
-    } 
+      } 
 //bullet hits guard
-      else if (bodyA.label == 'bullet' && bodyB.label == 'guard'
+      else if (bodyA.label == 'player_bullet' && bodyB.label == 'guard'
       ||
-      bodyB.label == 'bullet' && bodyA.label == 'guard') {
+      bodyB.label == 'player_bullet' && bodyA.label == 'guard') {
         var guard = bodyA.label=='guard' ? bodyA : bodyB;
-        var bullet = bodyA.label=='bullet' ? bodyA : bodyB;
+        var bullet = bodyA.label=='player_bullet' ? bodyA : bodyB;
         killGuard(guard);
         if (bullet.gameObject != null)
           bullet.gameObject.destroy();
         _scene.matter.world.remove(bullet);
       } 
-      else if (bodyA.label == 'bullet' && bodyB.label == 'explodingGuard'
+      else if (bodyA.label == 'guard_bullet' && bodyB.label == 'guard'
       ||
-      bodyB.label == 'bullet' && bodyA.label == 'explodingGuard') {
-        var guard = bodyA.label=='explodingGuard' ? bodyA : bodyB;
-        var bullet = bodyA.label=='bullet' ? bodyA : bodyB;
+      bodyB.label == 'guard_bullet' && bodyA.label == 'guard') {
+        var bullet = bodyA.label=='guard_bullet' ? bodyA : bodyB;
         if (bullet.gameObject != null)
           bullet.gameObject.destroy();
         _scene.matter.world.remove(bullet);
       } 
+//bullet hits exploding guard
+     else if (bodyA.label == 'player_bullet' && bodyB.label == 'explodingGuard'
+      ||
+      bodyB.label == 'player_bullet' && bodyA.label == 'explodingGuard') {
+        var guard = bodyA.label=='explodingGuard' ? bodyA : bodyB;
+        var bullet = bodyA.label=='player_bullet' ? bodyA : bodyB;
+        if (bullet.gameObject != null)
+          bullet.gameObject.destroy();
+        _scene.matter.world.remove(bullet);
+      } 
+//player hits wall
       else if ((bodyA.label == 'player' && bodyB.label == 'wall') ||
       (bodyB.label == 'player' && bodyA.label == 'wall')) {
         fryPlayer();
       } 
+//player hits guard
       else if (bodyA.label == 'player' && bodyB.label == 'guard' ||
                bodyB.label == 'player' && bodyA.label == 'guard') {
-      var guard = bodyA.label=='guard' ? bodyA : bodyB;
+        var guard = bodyA.label=='guard' ? bodyA : bodyB;
         fryPlayer();
-      killGuard(guard);
-    } 
-      else if (bodyA.label == 'bullet' && bodyB.label == 'player' 
-      || bodyB.label == 'bullet' && bodyA.label == 'player') {
-        var bullet = bodyA.label=='bullet' ? bodyA : bodyB;
+        killGuard(guard);
+      } 
+//guard bullet hits player      
+      else if (bodyA.label == 'guard_bullet' && bodyB.label == 'player' 
+      || bodyB.label == 'guard_bullet' && bodyA.label == 'player') {
+         var bullet = bodyA.label=='guard_bullet' ? bodyA : bodyB;
         fryPlayer();
         if (bullet.gameObject != null){
         bullet.gameObject.destroy();
@@ -245,7 +256,7 @@ function handleCollision(event){
      else if (bodyA.label == 'player' && bodyB.label == 'wall') {
         fryPlayer();
      }
-     else if (bodyA.label == 'bullet' && bodyB.label == 'bullet') {
+     else if (bodyA.label.includes('bullet') && bodyB.label.includes('bullet')) {
       if (bodyA.gameObject != null){
         bodyA.gameObject.destroy();
         _scene.matter.world.remove(bodyA);
@@ -259,6 +270,7 @@ function handleCollision(event){
         
     }
 }
+
 function destroyWorld(){
   player.destroy();
   _scene.matter.world.remove(player);
@@ -315,6 +327,7 @@ function setFrame(xv, yv) {
   else
     return 3;
 }
+
 function Fire(){
   if (player.dying) return;
   bulletDirection = {
@@ -323,7 +336,7 @@ function Fire(){
   };
   player.anims.pause(player.anims.currentAnim.frames[0]);
   var bullet = _scene.matter.add.sprite(0, 0, 'bullet');
-  bullet.body.label = 'bullet';
+  bullet.body.label = 'player_bullet';
   if (bulletDirection.xv != 0 || bulletDirection.yv != 0)
       shootBullet(bullet, bulletDirection);
   playerXSpeed = 0;
@@ -383,7 +396,7 @@ function guardShoot(guard) {
   //some light randomness to the bullet angle
   bulletDirection += ((Math.random() / 10) + (-(Math.random() / 10)));
   var bullet = _scene.matter.add.sprite(0, 0, 'bullet');
-  bullet.body.label = 'bullet';
+  bullet.body.label = 'guard_bullet';
   var xOffset = 0;
   var yOffset = 0;
   var xBulletSpeed = 5;
@@ -635,12 +648,13 @@ function spawnOTTO(){
   OTTO.setOrigin(0.5);
   OTTO.body.label = 'OTTO';
   OTTO.setCollisionCategory(cat5);
-  OTTO.setCollidesWith([cat5,cat1]);
-  OTTO.setCollidesWith([cat5,cat4]);
+  OTTO.setCollidesWith([cat1,cat4]);
   OTTO.setFixedRotation();
   OTTO.tint = levelData.enemy_color;
   OTTOAlive = true;
   OTTOYPath = yStart;
+  var rnd = Phaser.Math.Between(1, 5);
+  _scene.sound.play('sound'+rnd);
 }
 
 function killOTTO(){
@@ -709,42 +723,41 @@ function update() {
   if (OTTO!=undefined && OTTO.visible)
     moveOTTO();
 
-//    if(gameEnding || lives==0)
-//     {
-//       localStorage.setItem(localStorageName, highScore);
-//       if (score > highScore)
-//         highScore = score;
-//       gameOverText.visible = true;
-//       color.random(50);
-//       gameOverText.tint = color.color;
-//       gameOverText.setScale(3);
-//       guards.forEach(guard => {
-//         if (guard.gameObject != null){
-//         guard.gameObject.destroy();
-//       _scene.matter.world.remove(guard);
-//         }
-//       });
-//       player.destroy();
-//       _scene.matter.world.remove(player);
-//       _scene.time.delayedCall(1000, () => {
-//         gameOverText.visible = false;
-//           gameOver = true;
-//           clearLevel();
-//           scoreboard.visible = false;
-//           scoreText.visible = false;
-//           livesText.visible = false;
-//           levelText.visible = false;
-//           for (let index = 0; index < arrows.length; index++) {
-//             const arrow = arrows[index];
-//             arrow.visible = false;
-//           }
-//           startGame = false;
-//           gameEnding = false;
-//           showMainMenu();
-//         });
+   if(gameEnding || lives==0)
+    {
+      localStorage.setItem(localStorageName, highScore);
+      if (score > highScore)
+        highScore = score;
+      gameOverText.visible = true;
+      color.random(50);
+      gameOverText.tint = color.color;
+      gameOverText.setScale(3);
+      // guards.forEach(guard => {
+      //   if (guard.gameObject != null){
+      //   guard.gameObject.destroy();
+      // _scene.matter.world.remove(guard);
+      //   }
+      // });
+      // player.destroy();
+      // _scene.matter.world.remove(player);
+      _scene.time.delayedCall(1000, () => {
+        gameOverText.visible = false;
+          gameOver = true;
+          clearLevel();
+          scoreText.visible = false;
+          livesText.visible = false;
+          levelText.visible = false;
+          for (let index = 0; index < arrows.length; index++) {
+            const arrow = arrows[index];
+            arrow.visible = false;
+          }
+          startGame = false;
+          gameEnding = false;
+          showMainMenu();
+        });
  
-//   return;
-// }
+  return;
+}
 
 if(gameOver)
 {

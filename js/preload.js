@@ -10,6 +10,7 @@ function preload() {
   //this.load.image('arrow', 'arrow.png');
   this.load.image('maxxdaddy', 'maxxdaddy.gif');
   this.load.image('star', 'star.png');
+  this.load.image('game over', 'game_over.png');
  
   this.load.spritesheet('player', 'player.png', {
     frameWidth: 26,
@@ -37,6 +38,13 @@ function preload() {
     frameWidth: 74,
     frameHeight: 74
   }, );
+
+  this.load.path = '../assets/sounds/';
+  this.load.audio('sound1', 'attack_the_humanoid.wav');
+  this.load.audio('sound2', 'intruder_alert.wav');
+  this.load.audio('sound3', 'the_humanoid_must_not_escape.wav');
+  this.load.audio('sound4', 'the_humanoid_must_not_escape_deep_voice.wav');
+  this.load.audio('sound5', 'laser_blast.wav');
  
   this.load.path = '../assets/json/';
   this.load.json('levelData', 'level_data.json');
