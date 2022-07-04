@@ -694,11 +694,13 @@ function moveOTTO() {
 }
 
 function update() {
-  if (!startGame){
+  if (!startGame || gameOver){
     mainMenuUpdate();
     return;
   }
-  if (playerOutOfBounds()) {
+
+  if(!gameEnding){
+    if (playerOutOfBounds()) {
       clearLevel(this);
       player.setPosition(xStart, yStart);
       level++;
@@ -722,9 +724,10 @@ function update() {
 
   if (OTTO!=undefined && OTTO.visible)
     moveOTTO();
-
+  }
    if(gameEnding || lives==0)
-    {
+    { 
+      gameOverText.setDepth(1);
       localStorage.setItem(localStorageName, highScore);
       if (score > highScore)
         highScore = score;
@@ -732,18 +735,13 @@ function update() {
       color.random(50);
       gameOverText.tint = color.color;
       gameOverText.setScale(3);
-      // guards.forEach(guard => {
-      //   if (guard.gameObject != null){
-      //   guard.gameObject.destroy();
-      // _scene.matter.world.remove(guard);
-      //   }
-      // });
-      // player.destroy();
-      // _scene.matter.world.remove(player);
+      gameEnding = true;
+      clearLevel();
+      player.destroy();
+      _scene.matter.world.remove(player);
       _scene.time.delayedCall(1000, () => {
         gameOverText.visible = false;
           gameOver = true;
-          clearLevel();
           scoreText.visible = false;
           livesText.visible = false;
           levelText.visible = false;
@@ -753,16 +751,12 @@ function update() {
           }
           startGame = false;
           gameEnding = false;
-          showMainMenu();
+          showMainMenu(game_width);
         });
  
   return;
 }
 
-if(gameOver)
-{
-   return;
-}
 
   if (playerXSpeed === 0 && playerYSpeed === 0)
   {
