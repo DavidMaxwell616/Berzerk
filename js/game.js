@@ -35,51 +35,47 @@ function gameCreate() {
   score = 0;
   level = START_LEVEL;
   lives = 3;
-  objectData = _scene.cache.json.get('levelData');
-  walls = _scene.add.group();
-  bullets = _scene.add.group();
-  player = _scene.matter.add.sprite(0,0, 'player');
-  player.setOrigin(0.5).setScale(.8);
-  player.body.collideWorldBounds = true;
-  player.body.label = 'player';
-  player.dying = false;
-  player.shooting = false;
-  guards = _scene.add.group()
-  highScore = localStorage.getItem(localStorageName) == null ? 0 :
-  localStorage.getItem(localStorageName);
-	
-  _scene.matter.world.setBounds().disableGravity();
+  if(objectData==undefined)
+  {
+    objectData = _scene.cache.json.get('levelData');
+    walls = _scene.add.group();
+    bullets = _scene.add.group();
+    player = _scene.matter.add.sprite(0,0, 'player');
+    player.setOrigin(0.5).setScale(.8);
+    player.body.collideWorldBounds = true;
+    player.body.label = 'player';
+    player.dying = false;
+    player.shooting = false;
+    guards = _scene.add.group()
+    highScore = localStorage.getItem(localStorageName) == null ? 0 :
+    localStorage.getItem(localStorageName);
+    
+    _scene.matter.world.setBounds().disableGravity();
 
-   _scene.anims.create({
-    key: 'run',
-    frames: _scene.anims.generateFrameNumbers('player', {
-      start: 0,
-      end: 2
-    }),
-    frameRate: 10,
-    repeat: -1
-  });
+    _scene.anims.create({
+      key: 'run',
+      frames: _scene.anims.generateFrameNumbers('player', {
+        start: 0,
+        end: 2
+      }),
+      frameRate: 10,
+      repeat: -1
+    });
 
-  cat1 = _scene.matter.world.nextCategory();
-  cat2 = _scene.matter.world.nextCategory();
-  cat3 = _scene.matter.world.nextCategory();
-  cat4 = _scene.matter.world.nextCategory();
-  cat5 = _scene.matter.world.nextCategory();
- 
-  player.setFixedRotation();
-  player.anims.load('run');
-  player.setCollisionCategory(cat1);
-  player.setCollidesWith([cat2,cat3,cat4,cat5]);
-  playerXSpeed = 0;
-  playerYSpeed = 0;
-  player.setDepth(1)
-  maxxdaddy.visible = false;
-
-  resetOTTOTimer();
-  buildLevel();
-
-  guardCount = numGuards = level + 9;
-  spawnEnemies();
+    cat1 = _scene.matter.world.nextCategory();
+    cat2 = _scene.matter.world.nextCategory();
+    cat3 = _scene.matter.world.nextCategory();
+    cat4 = _scene.matter.world.nextCategory();
+    cat5 = _scene.matter.world.nextCategory();
+  
+    player.setFixedRotation();
+    player.anims.load('run');
+    player.setCollisionCategory(cat1);
+    player.setCollidesWith([cat2,cat3,cat4,cat5]);
+    playerXSpeed = 0;
+    playerYSpeed = 0;
+    player.setDepth(1)
+    maxxdaddy.visible = false;
  
   scoreText = _scene.add.text(
     game_width * 0.31,
@@ -178,6 +174,18 @@ function gameCreate() {
   gameOverText = _scene.add.image(game_width/2,game_height/2, 'game over');
   gameOverText.visible = false;
   gameOverText.setDepth(1);
+}
+resetOTTOTimer();
+playerExit = 0;
+buildLevel();
+player.visible = true;
+scoreText.visible = true;
+livesText.visible = true;
+levelText.visible = true;
+playerXSpeed = 0;
+playerYSpeed = 0;
+guardCount = numGuards = level + 9;
+spawnEnemies();
 }
 
 function handleCollision(event){
@@ -737,8 +745,7 @@ function update() {
       gameOverText.setScale(3);
       gameEnding = true;
       clearLevel();
-      player.destroy();
-      _scene.matter.world.remove(player);
+      player.visible = false;
       _scene.time.delayedCall(1000, () => {
         gameOverText.visible = false;
           gameOver = true;
@@ -751,7 +758,8 @@ function update() {
           }
           startGame = false;
           gameEnding = false;
-          showMainMenu(game_width);
+          if(!title.visible)
+            showMainMenu();
         });
  
   return;
