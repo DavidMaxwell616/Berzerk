@@ -33,7 +33,13 @@ let curScore = 0;
 let textTimer;
 let guards;
 let explodingGuards;
-let playerExit = 2;
+let playerEntrance;
+let Exits = {
+  'Left': 1,
+  'Right': 2,
+  'Top' : 3,
+  'Bottom':4
+};
 let OTTO;
 var OTTOYV = -5;
 var OTTOXV = 1;
@@ -143,3 +149,4 @@ var gameEnding = false;
 var gameOverCountdown=0;
 var GOD_MODE = true;
 var guardCount=0;
+var soundOn = false;

@@ -176,7 +176,7 @@ function gameCreate() {
   gameOverText.setDepth(1);
 }
 resetOTTOTimer();
-playerExit = 0;
+playerEntrance = Exits.Left;
 buildLevel();
 player.visible = true;
 scoreText.visible = true;
@@ -233,20 +233,20 @@ function handleCollision(event){
 //player hits wall
       else if ((bodyA.label == 'player' && bodyB.label == 'wall') ||
       (bodyB.label == 'player' && bodyA.label == 'wall')) {
-        fryPlayer();
+         if (!GOD_MODE) fryPlayer();
       } 
 //player hits guard
       else if (bodyA.label == 'player' && bodyB.label == 'guard' ||
                bodyB.label == 'player' && bodyA.label == 'guard') {
         var guard = bodyA.label=='guard' ? bodyA : bodyB;
-        fryPlayer();
+        if (!GOD_MODE) fryPlayer();
         killGuard(guard);
       } 
 //guard bullet hits player      
       else if (bodyA.label == 'guard_bullet' && bodyB.label == 'player' 
       || bodyB.label == 'guard_bullet' && bodyA.label == 'player') {
          var bullet = bodyA.label=='guard_bullet' ? bodyA : bodyB;
-        fryPlayer();
+         if (!GOD_MODE) fryPlayer();
         if (bullet.gameObject != null){
         bullet.gameObject.destroy();
         _scene.matter.world.remove(bullet);
@@ -259,11 +259,11 @@ function handleCollision(event){
          }
       else if(bodyA.label == 'OTTO' && bodyB.label == 'player'
       || bodyB.label == 'OTTO' && bodyA.label == 'player' ) {
-        fryPlayer();
-        }
+        if (!GOD_MODE) fryPlayer();
+      }
      else if (bodyA.label == 'player' && bodyB.label == 'wall') {
-        fryPlayer();
-     }
+      if (!GOD_MODE) fryPlayer();
+    }
      else if (bodyA.label.includes('bullet') && bodyB.label.includes('bullet')) {
       if (bodyA.gameObject != null){
         bodyA.gameObject.destroy();
@@ -493,7 +493,6 @@ function updateStats() {
 }
 
 function fryPlayer() {
- // if (GOD_MODE) return;
  _scene.anims.create({
   key: 'fry_Player',
   frames: _scene.anims.generateFrameNumbers('fry_player', {
@@ -544,26 +543,26 @@ function buildLevel() {
     walls.add(wall);
   }
   var x,y,w,h;
-  switch (playerExit) {
-    case 0:
+  switch (playerEntrance) {
+    case Exits.Right:
       x=game_width-WALL_WIDTH/2;
       y=246;
       w=WALL_WIDTH;
       h=150;
     break;
-    case 1:
+    case Exits.Bottom:
       x=game_width/2-WALL_WIDTH/2;
       y=game_height-SCOREBOARD_HEIGHT-WALL_WIDTH/2;
       w=170;
       h=WALL_WIDTH;
     break;
-    case 2:
+    case Exits.Left:
       x=WALL_WIDTH/2;
       y=246;
       w=WALL_WIDTH;
       h=150;
       break;
-    case 3:
+    case Exits.Top:
       x=game_width/2-WALL_WIDTH/2;
       y=WALL_WIDTH/2;
       w=170;
@@ -582,20 +581,20 @@ function buildLevel() {
     wall.setCollisionCategory(cat3);
     walls.add(wall);
     
-    switch (playerExit) {
-      case 0:
+    switch (playerEntrance) {
+      case Exits.Right:
         xStart = game_width-50;
         yStart = 240;
       break;
-      case 1:
+      case Exits.Top:
         xStart = game_width/2;
         yStart = game_height-SCOREBOARD_HEIGHT-40;
       break;
-      case 2:
+      case Exits.Left:
         xStart = 50;
         yStart = 240;
       break;
-      case 3:
+      case Exits.Bottom:
         xStart = game_width/2;
         yStart = 50;
       break;
@@ -806,21 +805,21 @@ if(bulletDirection.xv<0)
 
 function playerOutOfBounds(){
   if(player.x > game_width){
-    playerExit = 2;
+    playerEntrance = Exits.Left;
     return true;
   }
   else if(player.x<0){
-    playerExit = 0;
+    playerEntrance = Exits.Right;
     return true;
   } 
   else if(player.y>game_height-SCOREBOARD_HEIGHT)
   {
-    playerExit = 3;
+    playerEntrance = Exits.Top;
     return true;
   } 
   else if(player.y<0)
   {
-  playerExit = 1;
+  playerEntrance = Exits.Bottom;
   return true;
   }
   return false;
