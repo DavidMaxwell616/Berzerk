@@ -586,7 +586,7 @@ function buildLevel() {
         xStart = game_width-50;
         yStart = 240;
       break;
-      case Exits.Top:
+      case Exits.Bottom:
         xStart = game_width/2;
         yStart = game_height-SCOREBOARD_HEIGHT-40;
       break;
@@ -594,7 +594,7 @@ function buildLevel() {
         xStart = 50;
         yStart = 240;
       break;
-      case Exits.Bottom:
+      case Exits.Top:
         xStart = game_width/2;
         yStart = 50;
       break;
@@ -646,9 +646,7 @@ function moveEnemies() {
   });
 }
 
-function resetOTTOTimer(){
-  OTTOTimer = (12-level) * OTTO_TIMER_LENGTH;
-}
+const resetOTTOTimer = () => OTTOTimer = (12-level) * OTTO_TIMER_LENGTH;
 
 function spawnOTTO(){
   OTTO = _scene.matter.add.sprite(xStart, yStart, 'OTTO');
@@ -716,9 +714,9 @@ function update() {
       spawnEnemies(this);
       killOTTO();
     }
-  bullets.children.entries.forEach(bullet => {
-    if(bullet.x<WALL_WIDTH || bullet.x>game_width-WALL_WIDTH || bullet.y<WALL_WIDTH || bullet.y>game_height-SCOREBOARD_HEIGHT-WALL_WIDTH){
-      killBullet(bullet);
+    bullets.children.entries.forEach(bullet => {
+      if(bullet.x<WALL_WIDTH || bullet.x>game_width-WALL_WIDTH || bullet.y<WALL_WIDTH || bullet.y>game_height-SCOREBOARD_HEIGHT-WALL_WIDTH){
+        killBullet(bullet);
      }
   });
   if (OTTOTimer > 0){
@@ -819,10 +817,10 @@ function playerOutOfBounds(){
   } 
   else if(player.y<0)
   {
-  playerEntrance = Exits.Bottom;
-  return true;
+    playerEntrance = Exits.Bottom;
+    return true;
   }
-  return false;
+    return false;
 }
 
 function clearLevel() {
