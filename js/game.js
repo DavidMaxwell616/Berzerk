@@ -14,7 +14,11 @@ var config = {
       gravity: {
         y: 0,
       },
-      debug: false,
+      debug: false
+    //   debug: {
+    //     showBody: false,
+    //     showStaticBody: false
+    // }
     },
   },
 };
@@ -622,22 +626,22 @@ function moveEnemies() {
       var guardXMove = 0;
       var guardYMove = 0;
       if (player.y < guard.y)
-        guardYMove = -1;
+        guardYMove = -guardSpeed;
       else if (player.y > guard.y)
-        guardYMove = 1;
+        guardYMove = guardSpeed;
       if (player.x < guard.x) {
         guard.flipX = false;
-        guardXMove = -1;
+        guardXMove = -guardSpeed;
       } else if (player.x > guard.x) {
         guard.flipX = true;
-        guardXMove = 1;
+        guardXMove = guardSpeed;
       }
       guard.x += guardXMove;
       guard.y += guardYMove;
 //      if (guardXMove != 0 || guardYMove != 0)
 //      else
 //        guard.anims.pause(guard.anims.currentAnim.frames[0]);
-      let shoot = Phaser.Math.Between(1, 200);
+      let shoot = Phaser.Math.Between(1, 1200);
       if (shoot == 200) {
         guardShoot(guard)
       }
@@ -659,7 +663,7 @@ function spawnOTTO(){
   OTTOAlive = true;
   OTTOYPath = yStart;
   var rnd = Phaser.Math.Between(1, 5);
-  _scene.sound.play('sound'+rnd);
+  if(playSounds) _scene.sound.play('sound'+rnd);
 }
 
 function killOTTO(){
