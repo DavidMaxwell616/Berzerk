@@ -188,7 +188,7 @@ livesText.visible = true;
 levelText.visible = true;
 playerXSpeed = 0;
 playerYSpeed = 0;
-guardCount = numGuards = level + 9;
+guardCount = numGuards = level + 2;
 spawnEnemies();
 }
 
@@ -714,7 +714,7 @@ function update() {
       player.setPosition(xStart, yStart);
       level++;
       buildLevel(level);
-      guardCount = numGuards = level + 9;
+      guardCount = numGuards = level + NUM_GUARD_OFFSET;
       spawnEnemies(this);
       killOTTO();
     }

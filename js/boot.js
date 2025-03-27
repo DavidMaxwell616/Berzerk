@@ -7,6 +7,7 @@ const WALL_WIDTH =10;
 const HORIZON = HEIGHT/2;
 const OTTO_TIMER_LENGTH =50;
 const START_LEVEL = 1;
+const NUM_GUARD_OFFSET = 5;
 
 let stars;
 let player;
