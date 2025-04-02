@@ -449,26 +449,27 @@ function spawnEnemies() {
     var distance = Phaser.Math.Distance.Between(xStart, yStart, x, y);
     if (distance > 100) {
       var guard = _scene.matter.add.sprite(x, y, 'guard');
-
-      _scene.anims.create({
-        key: 'guardRun',
-        frames: _scene.anims.generateFrameNumbers('guard', {
-          start: 0,
-          end: 5
-        }),
-        frameRate: 10,
-        repeat: -1
-      });
-      _scene.anims.create({
-        key: 'guardExplode',
-        frames: _scene.anims.generateFrameNumbers('guard_explode', {
-          start: 0,
-          end: 3
-        }),
-        frameRate: 10,
-        repeat: 0
-      });
-
+      if (!guardAnimsCreated) {
+        _scene.anims.create({
+          key: 'guardRun',
+          frames: _scene.anims.generateFrameNumbers('guard', {
+            start: 0,
+            end: 5
+          }),
+          frameRate: 10,
+          repeat: -1
+        });
+        _scene.anims.create({
+          key: 'guardExplode',
+          frames: _scene.anims.generateFrameNumbers('guard_explode', {
+            start: 0,
+            end: 3
+          }),
+          frameRate: 10,
+          repeat: 0
+        });
+        guardAnimsCreated = true;
+      }
       guard.setFixedRotation();
       guard.setCollisionCategory(cat4);
       guard.anims.play('guardRun');
